@@ -19,5 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Averno-SCMU"
+rootProject.name = "Averno"
 include(":app")
+ 
