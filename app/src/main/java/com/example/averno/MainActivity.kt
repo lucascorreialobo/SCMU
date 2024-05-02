@@ -38,7 +38,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     )
 }
 
-@Preview(showBackground = true)
+@Preview(device = "id:pixel_5", showBackground = true)
 @Composable
 fun GreetingPreview() {
     AvernoTheme {
