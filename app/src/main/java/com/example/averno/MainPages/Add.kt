@@ -1,4 +1,4 @@
-package com.example.averno
+package com.example.averno.MainPages
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
