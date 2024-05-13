@@ -43,17 +43,17 @@ import com.example.averno.ui.theme.statusColor
 fun Home(){
     val forestList = arrayOf(
         Forest("Floresta Laurissilva", 0f),
-        Forest("Lagoa das Furnas", 0f),
-        Forest("Grená", 0f),
+        Forest("Lagoa das Furnas", 20f),
+        Forest("Grená", 90f),
         Forest("Parque Florestal de Monsanto", 10f),
-        Forest("Covão D'Ametade", 4f),
-        Forest("Mata-Jardim José do Canto", 6f),
-        Forest("Posto Florestal Fanal", 3f),
-        Forest("Parque Natural de Montesinho", 4f),
-        Forest("Mata Nacional dos Sete Montes", 4f),
+        Forest("Covão D'Ametade", 24f),
+        Forest("Mata-Jardim José do Canto", 76f),
+        Forest("Posto Florestal Fanal", 33f),
+        Forest("Parque Natural de Montesinho", 54f),
+        Forest("Mata Nacional dos Sete Montes", 64f),
         Forest("Quinta Da Ribafria", 11f),
-        Forest("Cabril do Ceira", 9f),
-        Forest("Curia Park", 5f),
+        Forest("Cabril do Ceira", 49f),
+        Forest("Curia Park", 55f),
     )
 
     forestList.sortWith(compareByDescending { it.dangerLevel })
