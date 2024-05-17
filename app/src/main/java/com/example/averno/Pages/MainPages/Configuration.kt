@@ -1,4 +1,4 @@
-package com.example.averno.MainPages
+package com.example.averno.Pages.MainPages
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,5 +12,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun Add(){
+fun Configuration(){
+    Box(modifier = Modifier.fillMaxSize()){
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .align(Alignment.Center),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(text = "Configuration", fontSize = 30.sp, color = Color.Green)
+        }
+    }
 }

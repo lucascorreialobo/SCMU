@@ -1,6 +1,5 @@
-package com.example.averno.MainPages
+package com.example.averno.Pages.DetailPages
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -15,50 +14,30 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeJoin
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.googlefonts.GoogleFont
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.averno.Forest
+import com.example.averno.ForestData
 import com.example.averno.R
-import com.example.averno.ui.theme.BackgroundGreen
-import com.example.averno.ui.theme.BottomNavigationTabGreen
+import com.example.averno.Screens
 import com.example.averno.ui.theme.backgroundColor
 import com.example.averno.ui.theme.statusColor
 
 @Composable
-fun Home(){
-    val forestList = arrayOf(
-        Forest("Floresta Laurissilva", 0f),
-        Forest("Lagoa das Furnas", 20f),
-        Forest("Grená", 90f),
-        Forest("Parque Florestal de Monsanto", 10f),
-        Forest("Covão D'Ametade", 24f),
-        Forest("Mata-Jardim José do Canto", 76f),
-        Forest("Posto Florestal Fanal", 33f),
-        Forest("Parque Natural de Montesinho", 54f),
-        Forest("Mata Nacional dos Sete Montes", 64f),
-        Forest("Quinta Da Ribafria", 11f),
-        Forest("Cabril do Ceira", 49f),
-        Forest("Curia Park", 55f),
-    )
+fun ForestListPage(navigationController: NavHostController){
+    val forestList = ForestData().forestList
 
     forestList.sortWith(compareByDescending { it.dangerLevel })
 
-    var maxDanger = forestList.get(0).dangerLevel
+    val maxDanger = forestList[0].dangerLevel
 
     Column (modifier = Modifier
         .fillMaxSize()
@@ -68,11 +47,11 @@ fun Home(){
             fontFamily = FontFamily.Serif,
             modifier = Modifier.padding(10.dp),
             color = Color.White,
-            fontSize = 30.sp)
+            fontSize = 35.sp)
 
         for (f in forestList) {
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { navigationController.navigate("forest_detail_page/" + f.id)},
                 Modifier
                     .fillMaxSize()
                     .padding(4.dp),
@@ -89,9 +68,10 @@ fun Home(){
                     )
                     Spacer(modifier = Modifier.size(15.dp))
                     Text(text = f.name,
-                        fontSize = 20.sp,
+                        fontSize = 25.sp,
                         fontFamily = FontFamily.Serif,
-                        modifier = Modifier.align(Alignment.CenterVertically))
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically))
                 }
             }
         }

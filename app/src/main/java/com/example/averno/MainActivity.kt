@@ -31,8 +31,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.averno.MainPages.Configuration
-import com.example.averno.MainPages.Home
+import com.example.averno.Pages.MainPages.Configuration
+import com.example.averno.Pages.MainPages.Home
 import com.example.averno.ui.theme.AvernoTheme
 import com.example.averno.ui.theme.BottomNavigationTabGreen
 
