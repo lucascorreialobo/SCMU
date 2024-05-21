@@ -1,4 +1,5 @@
 void setUpWifi() {
+  WiFi.mode(WIFI_AP_STA);
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 
   Serial.print("Connecting to Wi-Fi");

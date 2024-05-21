@@ -24,28 +24,50 @@ bool scanedForSlaves = false;
 
 void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);
 
+unsigned long previousSlaveScan = 0;
+const unsigned long slaveScanInterval = 5000;
+bool doScanSlave = true;
+const unsigned long manageSlaveInterval = 1000;
+bool doManageSlave = false;
+
 void setup() {
   Serial.begin(9600);
 
   setup_master_connection();
   start_DHT_sensor();
 
-  FirebaseSetUp();
 
+  FirebaseSetUp();
+  
 }
 
 void loop() {  
+
+  unsigned long currentMillis = millis();
 
   startAsyncFirebase();
   
   firebase_code();
 
-  ScanForSlave();
-  delay(1000);
-  manageSlave();
+  if (doScanSlave && currentMillis - previousSlaveScan >= slaveScanInterval) {
+    ScanForSlave();
+    previousSlaveScan = currentMillis;
+    doScanSlave = false;
+    doManageSlave = true;
+  }
+
+  if(doManageSlave && currentMillis - previousSlaveScan >= manageSlaveInterval ){
+    manageSlave();
+    previousSlaveScan = currentMillis;
+    doScanSlave = true;
+    doManageSlave = false;
+  }
+
+  //delay(1000);
+  
   //handle_connection();
   // send_data(get_sensor_data());
-  delay(5000);
+  //delay(5000);
 }
 
 

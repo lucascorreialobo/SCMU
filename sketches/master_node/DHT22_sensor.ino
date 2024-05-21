@@ -14,7 +14,7 @@ DHT dht_sensor(DHT_PIN, DHTTYPE);
 
 void start_DHT_sensor(){
   dht_sensor.begin();
-  Serial.print("DHT is on!");
+  Serial.println("DHT is on!");
 }
 
 float read_DHT_temperature(bool isFahrenheit = false){

@@ -109,8 +109,13 @@ void printResult(AsyncResult &aResult)
 
 void firebase_code(){
 
+  if(!app.ready()){
+    //Serial.println("App is not ready yet, please wait a bit.");
+  }
+
   if (app.ready() && !taskComplete)
   {
+
     testFirebaseGetSend();
   }
 

@@ -17,7 +17,7 @@ int SlaveCnt = 0;
 
 // Init ESP Now with fallback
 void InitESPNow() {
-  WiFi.disconnect();
+  //WiFi.disconnect();
   if (esp_now_init() == ESP_OK) {
     Serial.println("ESPNow Init Success");
   }
