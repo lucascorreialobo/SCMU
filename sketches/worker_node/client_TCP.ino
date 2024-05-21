@@ -28,7 +28,7 @@ void InitESPNow() {
 
 
 // config AP SSID
-void configDeviceAP() {
+void configSlaveDeviceAP() {
   String Prefix = "Slave:";
   String Mac = WiFi.macAddress();
   String SSID = Prefix + Mac;
@@ -91,20 +91,87 @@ void ScanForMaster() {
   WiFi.scanDelete();
 }
 
-void setup_connection(){
+// Check if the slave is already paired with the master.
+// If not, pair the slave with master
+void manageMaster() {
+  if (MasterCnt > 0) {
+    for (int i = 0; i < MasterCnt; i++) {
+      Serial.print("Processing: ");
+      for (int ii = 0; ii < 6; ++ii ) {
+        Serial.print((uint8_t) master[i].peer_addr[ii], HEX);
+        if (ii != 5) Serial.print(":");
+      }
+      Serial.print(" Status: ");
+      // check if the peer exists
+      bool exists = esp_now_is_peer_exist(master[i].peer_addr);
+      if (exists) {
+        // Slave already paired.
+        Serial.println("Already Paired");
+      } else {
+        // Slave not paired, attempt pair
+        esp_err_t addStatus = esp_now_add_peer(&master[i]);
+        if (addStatus == ESP_OK) {
+          // Pair success
+          Serial.println("Pair success");
+        } else if (addStatus == ESP_ERR_ESPNOW_NOT_INIT) {
+          // How did we get so far!!
+          Serial.println("ESPNOW Not Init");
+        } else if (addStatus == ESP_ERR_ESPNOW_ARG) {
+          Serial.println("Add Peer - Invalid Argument");
+        } else if (addStatus == ESP_ERR_ESPNOW_FULL) {
+          Serial.println("Peer list full");
+        } else if (addStatus == ESP_ERR_ESPNOW_NO_MEM) {
+          Serial.println("Out of memory");
+        } else if (addStatus == ESP_ERR_ESPNOW_EXIST) {
+          Serial.println("Peer Exists");
+        } else {
+          Serial.println("Not sure what happened");
+        }
+        delay(100);
+      }
+    }
+  } else {
+    // No slave found to process
+    Serial.println("No Master found to process");
+  }
+}
+
+void setup_slave_connection(){
   WiFi.mode(WIFI_AP);
+
+  // WiFi.begin(ssid, password);
+  // while (WiFi.status() != WL_CONNECTED) {
+  //   delay(500);
+  //   Serial.print(".");
+  // }
+  // Serial.println("");
+  // Serial.println("WiFi connected.");
+  
+  // Init and get the time
+  // configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
+  setup_Time();
+
   // configure device AP mode
-  configDeviceAP();
+  configSlaveDeviceAP();
   // This is the mac address of the Slave in AP Mode
   Serial.print("AP MAC: "); Serial.println(WiFi.softAPmacAddress());
   // Init ESPNow with a fallback logic
   InitESPNow();
-  // Once ESPNow is successfully Init, we will register for recv CB to
+
+  esp_now_register_send_cb(OnDataSent);
   // get recv packer info.
   esp_now_register_recv_cb(OnDataRecv);
 
-
   //receive master Mac Address
+}
+
+// callback when data is sent from Slave to Master
+void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
+  char macStr[18];
+  snprintf(macStr, sizeof(macStr), "%02x:%02x:%02x:%02x:%02x:%02x",
+           mac_addr[0], mac_addr[1], mac_addr[2], mac_addr[3], mac_addr[4], mac_addr[5]);
+  Serial.print("Last Packet Sent to: "); Serial.println(macStr);
+  Serial.print("Last Packet Send Status: "); Serial.println(status == ESP_NOW_SEND_SUCCESS ? "Delivery Success" : "Delivery Fail");
 }
 
 // callback when data is recv from Master
@@ -122,11 +189,13 @@ void send_data(SensorData data) {
   test_data++;
   for (int i = 0; i < MasterCnt; i++) {
     const uint8_t *peer_addr = master[i].peer_addr;
+    Serial.print("Sending to peer addr: ");
+    Serial.println(*peer_addr);
     if (i == 0) {
-      Serial.print("Sending: sensorial data");
+      Serial.println("Sending: sensorial data");
     }
     esp_err_t result = esp_now_send(peer_addr, (uint8_t *) &data, sizeof(data));
-    Serial.print("Send Status: ");
+    Serial.println("Send Status: ");
     if (result == ESP_OK) {
       Serial.println("Success");
     } else if (result == ESP_ERR_ESPNOW_NOT_INIT) {
