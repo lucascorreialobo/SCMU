@@ -122,11 +122,10 @@ void loop()
         taskComplete = true;
 
         Database.get(aClient, "/forests/{}/{time}/", asyncCB, false, "getTask1");
-        Database.set<int>(aClient, "/test/int", 12345, asyncCB, "setIntTask");
+        Database.set<int>(aClient, "/test/int", 22, asyncCB, "setIntTask");
 
         int time;
 
-        Database.set
 
         //Database.get(aClient, "/test/string", asyncCB, false, "getTask2");
 
