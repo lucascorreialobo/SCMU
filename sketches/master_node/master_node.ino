@@ -30,10 +30,16 @@ void setup() {
   setup_master_connection();
   start_DHT_sensor();
 
+  FirebaseSetUp();
+
 }
 
 void loop() {  
+
+  startAsyncFirebase();
   
+  firebase_code();
+
   ScanForSlave();
   delay(1000);
   manageSlave();

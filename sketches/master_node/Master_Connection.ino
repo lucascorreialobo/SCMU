@@ -11,6 +11,10 @@ int SlaveCnt = 0;
 #define CHANNEL 1
 #define PRINTSCANRESULTS 0
 
+#define WIFI_SSID "LL"
+#define WIFI_PASSWORD "LucasL00"
+
+
 // Init ESP Now with fallback
 void InitESPNow() {
   WiFi.disconnect();
@@ -24,6 +28,24 @@ void InitESPNow() {
     // or Simply Restart
     ESP.restart();
   }
+}
+
+
+void setUpWifi() {
+  //WiFi.mode(WIFI_STA);
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+
+  Serial.print("Connecting to Wi-Fi");
+  while (WiFi.status() != WL_CONNECTED)
+  {
+      Serial.print(".");
+      delay(300);
+  }
+  Serial.println();
+  Serial.print("Connected with IP: ");
+  Serial.println(WiFi.localIP());
+  Serial.println();
+
 }
 
 // config AP SSID
@@ -204,7 +226,7 @@ void OnDataRecv(const uint8_t *mac_addr, const uint8_t *data, int data_len) {
 
 void setup_master_connection() {
   //Set device in STA mode to begin with
-  WiFi.mode(WIFI_MODE_APSTA);
+  WiFi.mode(WIFI_AP_STA);
 
   // configure device AP mode
   configMasterDeviceAPSTA();
@@ -221,6 +243,7 @@ void setup_master_connection() {
   // }
   // Serial.println("");
   // Serial.println("WiFi connected.");
+  setUpWifi();
   
   // Init and get the time
   // configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);

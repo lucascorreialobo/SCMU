@@ -1,3 +1,5 @@
+#include <FirebaseClient.h>
+
 // The API key can be obtained from Firebase console > Project Overview > Project settings.
 #define API_KEY "AIzaSyDnhI7ErwlSY-T3j6z1EUt1tpNE7QSsWEQ"
 
@@ -26,6 +28,8 @@ AsyncClient aClient(ssl_client, getNetwork(network));
 
 RealtimeDatabase Database;
 
+bool taskComplete = false;
+
 void FirebaseSetUp(){
   Firebase.printf("Firebase Client v%s\n", FIREBASE_CLIENT_VERSION);
 
@@ -52,7 +56,7 @@ void testFirebaseGetSend(){
   
   taskComplete = true;
 
-  Database.get(aClient, "/forests/{}/{time}/", asyncCB, false, "getTask1");
+  Database.get(aClient, "/forests", asyncCB, false, "getTask1");
   Database.set<int>(aClient, "/test/int", 22, asyncCB, "setIntTask");
 
   int time;
