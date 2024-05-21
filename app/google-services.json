@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "776252092951",
+    "firebase_url": "https://averno-scmu-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "averno-scmu",
+    "storage_bucket": "averno-scmu.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:776252092951:android:99add4e12297e2200be252",
+        "android_client_info": {
+          "package_name": "com.example.averno"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdzmUEiqqm1sSnmu9hwZ7VXs12sxHnuCQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
