@@ -22,9 +22,9 @@ class ForestData(){
         Forest(1,"Lagoa das Furnas", 17.2f, detail),
         Forest(2,"Grená", 24.6f, detail),
         Forest(3,"Parque Florestal de Monsanto", 38.3f, detail),
-        Forest(4,"Covão D'Ametade", 50.1f, detail),
-        Forest(5,"Mata-Jardim José do Canto", 64f, detail),
-        Forest(6,"Posto Florestal Fanal", 70f, detail),
+        Forest(4,"Covão D'Ametade", 0.1f, detail),
+        Forest(5,"Mata-Jardim José do Canto", 4f, detail),
+        Forest(6,"Posto Florestal Fanal", 0f, detail),
         Forest(7,"Parque Natural de Montesinho", 0f, detail),
         Forest(8,"Mata Nacional dos Sete Montes", 0f, detail),
     )
