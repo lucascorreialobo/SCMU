@@ -1,10 +1,15 @@
 #include <esp_now.h>
+#include "esp32/ulp.h"
+#include "driver/rtc_io.h"
 
 #define DHT_PIN 27 //Digital pin connected to the DHT sensor
 #define MQ2_PIN 14
 
 const char* ssid     = "NOS_Internet_4FC7";
 const char* password = "67827246";
+
+const int TIME_TO_SLEEP = 10;           /* Time ESP32 will go to sleep (in microseconds); multiplied by above conversion to achieve seconds*/
+const int TIME_TO_SCAN_MASTER = 10;
 
 struct SensorData {
   float temperatureC; // temperature reading in Celsius

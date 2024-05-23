@@ -221,6 +221,13 @@ void OnDataRecv(const uint8_t *mac_addr, const uint8_t *data, int data_len) {
     Serial.print("Humidity: "); Serial.println(receivedData->humidity);
     Serial.print("Gas: "); Serial.println(receivedData->gas);
   }
+  else{
+    Serial.print("Received message: ");
+    for (int i = 0; i < data_len; i++) {
+      Serial.print((char)incomingData[i]);
+    }
+    Serial.println();
+  }
   
 }
 
