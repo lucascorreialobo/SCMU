@@ -1,6 +1,8 @@
 package com.example.averno
 
+import android.content.ContentValues
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -28,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -56,6 +59,9 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MyBottomAppBar(){
+
+    Log.d(ContentValues.TAG, "Failed to read value.")
+
     val navigationController = rememberNavController()
     val context = LocalContext.current.applicationContext
     val selected = remember {

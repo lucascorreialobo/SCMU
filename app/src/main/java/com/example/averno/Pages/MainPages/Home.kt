@@ -6,7 +6,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.averno.Forest
 import com.example.averno.Pages.DetailPages.ForestDetailPage
 import com.example.averno.Pages.DetailPages.ForestListPage
 
@@ -23,9 +22,9 @@ fun Home(){
 
         composable(
             "forest_detail_page/{forestId}",
-            arguments = listOf(navArgument("forestId") {defaultValue = 0})
+            arguments = listOf(navArgument("forestId") {defaultValue = ""})
         ) { backStackEntry ->
-            ForestDetailPage(navigationController, backStackEntry.arguments?.getInt("forestId"))
+            ForestDetailPage(navigationController, backStackEntry.arguments?.getString("forestId"))
         }
 
     }

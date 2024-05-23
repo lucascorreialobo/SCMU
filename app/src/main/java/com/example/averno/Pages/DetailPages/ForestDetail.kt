@@ -19,6 +19,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,10 +28,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.averno.Forest
 import com.example.averno.ForestData
 import com.example.averno.R
+import com.example.averno.SensorData
 import com.example.averno.ui.theme.BottomNavigationTabGreen
 import com.example.averno.ui.theme.DetailBody
 import com.example.averno.ui.theme.DetailHeadline
@@ -40,112 +43,92 @@ import com.example.averno.ui.theme.getDangerColor
 import com.example.averno.ui.theme.statusColor
 
 @Composable
-fun ForestDetailPage(navigationController: NavHostController, id:Int?) {
-    var f: Forest
-    if(id != null) {
-        f = ForestData().forestList[id]
-    } else {
-        f = ForestData().forestList[0]
-    }
+fun ForestDetailPage(navigationController: NavHostController, key:String?) {
+
+    val viewModel: ForestData = viewModel()
+    val forestList by viewModel.sensorData.collectAsState()
+    val sensorList: List<SensorData>? = forestList[key]
 
     Column (modifier = Modifier
         .fillMaxSize()
-        .background(statusColor(f.dangerLevel))
+        .background(statusColor(0f)) //TODO change to dangerLevel
         .verticalScroll(rememberScrollState())){
         Row {
-            Text(text = f.name,
-                fontFamily = FontFamily.Serif,
-                modifier = Modifier.padding(10.dp),
-                color = Color.White,
-                fontSize = DetailHeadline)
-        }
-
-        //Temperature
-        Card(modifier = Modifier
-            .fillMaxWidth()
-            .padding(6.dp),
-            border = BorderStroke(2.dp, Color.DarkGray)
-
-            )
-        {
-            Column {
-                Text(
-                    text = "Temperature",
+            if (key != null) {
+                Text(text = key,
                     fontFamily = FontFamily.Serif,
                     modifier = Modifier.padding(10.dp),
-                    color = DetailTextColor,
-                    fontSize = DetailTitle
-                )
-
-                Text(
-                    text = "Max: " + f.details.maxTemperature.toString(),
-                    fontFamily = FontFamily.Serif,
-                    modifier = Modifier.padding(10.dp),
-                    color = DetailTextColor,
-                    fontSize = DetailBody
-                )
-
-                Text(
-                    text = "Min: " + f.details.minTemperature.toString(),
-                    fontFamily = FontFamily.Serif,
-                    modifier = Modifier.padding(10.dp),
-                    color = DetailTextColor,
-                    fontSize = DetailBody
-                )
-
-                Text(
-                    text = "Average: " + f.details.avgTemperature.toString(),
-                    fontFamily = FontFamily.Serif,
-                    modifier = Modifier.padding(10.dp),
-                    color = DetailTextColor,
-                    fontSize = DetailBody
-                )
+                    color = Color.White,
+                    fontSize = DetailHeadline)
             }
         }
 
-        //Humidity
-        Card(modifier = Modifier
-            .fillMaxWidth()
-            .padding(6.dp),
-            border = BorderStroke(2.dp, Color.DarkGray)
-
-        )
-        {
-            Column {
-                Text(
-                    text = "Humidity",
+        if (sensorList != null) {
+            for(sensor in sensorList) {
+                Text(text = "Sensor: " + sensor.sensorId,
                     fontFamily = FontFamily.Serif,
                     modifier = Modifier.padding(10.dp),
-                    color = DetailTextColor,
-                    fontSize = DetailTitle
-                )
+                    color = Color.White,
+                    fontSize = DetailTitle)
 
-                Text(
-                    text = "Max: " + f.details.maxHumidity.toString(),
-                    fontFamily = FontFamily.Serif,
-                    modifier = Modifier.padding(10.dp),
-                    color = DetailTextColor,
-                    fontSize = DetailBody
-                )
+                //Temperature
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(6.dp),
+                    border = BorderStroke(2.dp, Color.DarkGray)
 
-                Text(
-                    text = "Min: " + f.details.minHumidity.toString(),
-                    fontFamily = FontFamily.Serif,
-                    modifier = Modifier.padding(10.dp),
-                    color = DetailTextColor,
-                    fontSize = DetailBody
                 )
+                {
+                    Column {
+                        Text(
+                            text = "Temperature",
+                            fontFamily = FontFamily.Serif,
+                            modifier = Modifier.padding(10.dp),
+                            color = DetailTextColor,
+                            fontSize = DetailTitle
+                        )
 
-                Text(
-                    text = "Average: " + f.details.avgHumidity.toString(),
-                    fontFamily = FontFamily.Serif,
-                    modifier = Modifier.padding(10.dp),
-                    color = DetailTextColor,
-                    fontSize = DetailBody
+                        Text(
+                            text = "Current: " + sensor.temp,
+                            fontFamily = FontFamily.Serif,
+                            modifier = Modifier.padding(10.dp),
+                            color = DetailTextColor,
+                            fontSize = DetailBody
+                        )
+                    }
+                }
+
+                //Humidity
+                Card(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(6.dp),
+                    border = BorderStroke(2.dp, Color.DarkGray)
+
                 )
+                {
+                    Column {
+                        Text(
+                            text = "Humidity",
+                            fontFamily = FontFamily.Serif,
+                            modifier = Modifier.padding(10.dp),
+                            color = DetailTextColor,
+                            fontSize = DetailTitle
+                        )
+
+                        Text(
+                            text = "Current: " + sensor.humi,
+                            fontFamily = FontFamily.Serif,
+                            modifier = Modifier.padding(10.dp),
+                            color = DetailTextColor,
+                            fontSize = DetailBody
+                        )
+                    }
+                }
             }
         }
 
+        /*
         Card(modifier = Modifier
             .fillMaxWidth()
             .padding(6.dp),
@@ -186,7 +169,7 @@ fun ForestDetailPage(navigationController: NavHostController, id:Int?) {
                     fontSize = DetailBody
                 )
             }
-        }
+        }*/
 
     }
 }

@@ -1,32 +1,60 @@
 package com.example.averno
 
-data class Forest(val id: Int, val name: String, val dangerLevel: Float, val details: Detail)
+import android.content.ContentValues.TAG
+import android.util.Log
+import androidx.lifecycle.ViewModel
+import com.google.firebase.Firebase
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.database
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
-data class Detail(
-    val maxTemperature: Float,
-    val minTemperature: Float,
-    val avgTemperature: Float,
-    val maxHumidity: Float,
-    val minHumidity: Float,
-    val avgHumidity: Float,
-    val maxGas: Float,
-    val minGas: Float,
-    val avgGas: Float,
+data class SensorData(
+    var sensorId: String = "0",
+    val humi: Int = 0,
+    val temp: Int = 0
 )
 
-class ForestData(){
-    var detail = Detail(1f,1f,1f,1f,1f,1f,1f,1f,1f)
 
-    var forestList = arrayOf<Forest>(
-        Forest(0,"Floresta Laurissilva", 8.2f, detail),
-        Forest(1,"Lagoa das Furnas", 17.2f, detail),
-        Forest(2,"Grená", 24.6f, detail),
-        Forest(3,"Parque Florestal de Monsanto", 38.3f, detail),
-        Forest(4,"Covão D'Ametade", 0.1f, detail),
-        Forest(5,"Mata-Jardim José do Canto", 4f, detail),
-        Forest(6,"Posto Florestal Fanal", 0f, detail),
-        Forest(7,"Parque Natural de Montesinho", 0f, detail),
-        Forest(8,"Mata Nacional dos Sete Montes", 0f, detail),
-    )
+class ForestData: ViewModel(){
 
+    private val database = Firebase.database
+    val myRef = database.getReference("forests")
+
+    private val _sensorData = MutableStateFlow<Map<String, List<SensorData>>>(emptyMap())
+    val sensorData: StateFlow<Map<String, List<SensorData>>> = _sensorData
+
+    init {
+        fetchMessage()
+    }
+
+
+    private fun fetchMessage() {
+        myRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val dataMap = mutableMapOf<String, List<SensorData>>()
+                for (sensorSnapshot in snapshot.children) {
+                    val forestName = sensorSnapshot.key ?: continue
+                    val sensorList = mutableListOf<SensorData>()
+                    var sensorData = SensorData()
+                    for (childSnapshot in sensorSnapshot.children) {
+                        sensorSnapshot.key ?: continue
+                        sensorData = childSnapshot.getValue(SensorData::class.java) ?: continue
+                        sensorData.sensorId = childSnapshot.key ?: continue
+                        sensorList.add(sensorData)
+                    }
+                    dataMap[forestName] = sensorList
+                }
+                _sensorData.value = dataMap
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.w(TAG, "Failed to read value.", error.toException())
+            }
+        })
+
+        Log.d(TAG, "Failed to read value.")
+    }
 }

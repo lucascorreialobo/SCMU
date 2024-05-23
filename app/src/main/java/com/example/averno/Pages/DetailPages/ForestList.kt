@@ -16,6 +16,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,25 +25,24 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.averno.Forest
 import com.example.averno.ForestData
 import com.example.averno.R
-import com.example.averno.Screens
 import com.example.averno.ui.theme.backgroundColor
 import com.example.averno.ui.theme.statusColor
 
 @Composable
 fun ForestListPage(navigationController: NavHostController){
-    val forestList = ForestData().forestList
 
-    forestList.sortWith(compareByDescending { it.dangerLevel })
+    val viewModel: ForestData = viewModel()
+    val forestList by viewModel.sensorData.collectAsState()
 
-    val maxDanger = forestList[0].dangerLevel
+    val maxDanger = 0 //TODO change to dangerLevel
 
     Column (modifier = Modifier
         .fillMaxSize()
-        .background(backgroundColor(maxDanger))
+        .background(backgroundColor(maxDanger.toFloat())) //TODO change to dangerLevel
         .verticalScroll(rememberScrollState())){
         Text(text = "Averno",
             fontFamily = FontFamily.Serif,
@@ -51,12 +52,12 @@ fun ForestListPage(navigationController: NavHostController){
 
         for (f in forestList) {
             Button(
-                onClick = { navigationController.navigate("forest_detail_page/" + f.id)},
+                onClick = { navigationController.navigate("forest_detail_page/" + f.key)},
                 Modifier
                     .fillMaxSize()
                     .padding(4.dp),
                 shape = RoundedCornerShape(20),
-                colors = ButtonDefaults.buttonColors(containerColor = statusColor(f.dangerLevel))
+                colors = ButtonDefaults.buttonColors(containerColor = statusColor(0f)) //TODO change to dangerLevel
             ) {
                 Row (Modifier.fillMaxWidth()){
                     Image(
@@ -67,11 +68,12 @@ fun ForestListPage(navigationController: NavHostController){
                             .align(Alignment.CenterVertically)
                     )
                     Spacer(modifier = Modifier.size(15.dp))
-                    Text(text = f.name,
+                    Text(text = f.key,
                         fontSize = 25.sp,
                         fontFamily = FontFamily.Serif,
                         modifier = Modifier
                             .align(Alignment.CenterVertically))
+
                 }
             }
         }
