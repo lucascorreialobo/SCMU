@@ -91,6 +91,10 @@ void ScanForMaster() {
   WiFi.scanDelete();
 }
 
+bool wasMasterFound(){
+  return MasterCnt > 0;
+}
+
 // Check if the slave is already paired with the master.
 // If not, pair the slave with master
 void manageMaster() {
