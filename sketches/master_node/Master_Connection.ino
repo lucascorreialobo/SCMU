@@ -1,6 +1,6 @@
 
 #include <esp_now.h>
-#include <WiFi.h>
+//#include <WiFi.h>
 #include <esp_wifi.h>
 
 // Global copy of slave
@@ -32,19 +32,18 @@ void InitESPNow() {
 
 
 void setUpWifi() {
-  //WiFi.mode(WIFI_STA);
-  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  WiFi.begin(ssid, password);
 
-  Serial.print("Connecting to Wi-Fi");
-  while (WiFi.status() != WL_CONNECTED)
-  {
-      Serial.print(".");
-      delay(300);
-  }
-  Serial.println();
-  Serial.print("Connected with IP: ");
-  Serial.println(WiFi.localIP());
-  Serial.println();
+  // Serial.print("Connecting to Wi-Fi");
+  // while (WiFi.status() != WL_CONNECTED)
+  // {
+  //     Serial.print(".");
+  //     delay(300);
+  // }
+  // Serial.println();
+  // Serial.print("Connected with IP: ");
+  // Serial.println(WiFi.localIP());
+  // Serial.println();
 
 }
 
@@ -111,6 +110,10 @@ void ScanForSlave() {
 
   // clean up ram
   WiFi.scanDelete();
+}
+
+bool wereSlavesFound(){
+  return SlaveCnt > 0;
 }
 
 // Check if the slave is already paired with the master.
@@ -224,7 +227,7 @@ void OnDataRecv(const uint8_t *mac_addr, const uint8_t *data, int data_len) {
   else{
     Serial.print("Received message: ");
     for (int i = 0; i < data_len; i++) {
-      Serial.print((char)incomingData[i]);
+      Serial.print((char)data[i]);
     }
     Serial.println();
   }
@@ -250,7 +253,7 @@ void setup_master_connection() {
   // }
   // Serial.println("");
   // Serial.println("WiFi connected.");
-  setUpWifi();
+  // setUpWifi();
   
   // Init and get the time
   // configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);

@@ -7,6 +7,8 @@
 esp_now_peer_info_t master[NUMMASTER] = {};
 int MasterCnt = 0;
 
+bool was_delivery_sucess = false;
+
 #define CHANNEL 1
 #define PRINTSCANRESULTS 0
 
@@ -201,6 +203,7 @@ void send_data(SensorData data) {
     esp_err_t result = esp_now_send(peer_addr, (uint8_t *) &data, sizeof(data));
     Serial.println("Send Status: ");
     if (result == ESP_OK) {
+      was_delivery_sucess = true;
       Serial.println("Success");
     } else if (result == ESP_ERR_ESPNOW_NOT_INIT) {
       // How did we get so far!!
@@ -218,5 +221,9 @@ void send_data(SensorData data) {
     }
     delay(100);
   }
+}
+
+bool wasDeliverySuccessful(){
+  return was_delivery_sucess;
 }
 
