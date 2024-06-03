@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -38,6 +39,7 @@ import com.example.averno.Pages.MainPages.Configuration
 import com.example.averno.Pages.MainPages.Home
 import com.example.averno.ui.theme.AvernoTheme
 import com.example.averno.ui.theme.BottomNavigationTabGreen
+import com.example.averno.ui.theme.backgroundColor
 
 
 class MainActivity : ComponentActivity() {
@@ -74,7 +76,7 @@ fun MyBottomAppBar(){
                 containerColor = BottomNavigationTabGreen,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .size(200.dp, 75.dp)
+                    .size(300.dp, 125.dp)
 
             ){
                 IconButton(
@@ -93,7 +95,9 @@ fun MyBottomAppBar(){
                 Box(modifier = Modifier
                     .weight(1f)
                     .padding(6.dp),
-                    contentAlignment = Alignment.Center) {
+                    contentAlignment = Alignment.Center
+
+                ) {
                     FloatingActionButton(onClick = {
                         Toast.makeText(
                             context,

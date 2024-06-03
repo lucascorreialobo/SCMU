@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -30,11 +29,12 @@ import com.example.averno.ui.theme.DetailTitle
 import com.example.averno.ui.theme.statusColor
 
 @Composable
-fun ForestDetailPage(navigationController: NavHostController, key:String?) {
+fun WatcherDetailPage(navigationController: NavHostController, forestKey:String?, sensorKey: Int?) {
 
     val viewModel: ForestData = viewModel()
     val forestList by viewModel.forestData.collectAsState()
-    val sensorList: List<SensorData>? = forestList[key]
+    val sensorList: List<SensorData>? = forestList[forestKey]
+    val sensor: SensorData? = sensorKey?.let { sensorList?.get(it) }
 
     var totalTemp: Float = 0f
     var totalHum: Float = 0f
@@ -45,22 +45,18 @@ fun ForestDetailPage(navigationController: NavHostController, key:String?) {
         .background(statusColor(0f)) //TODO change to dangerLevel
         .verticalScroll(rememberScrollState())){
 
-        //Forest name
+        //Sensor name
         Row {
-            if (key != null) {
-                Text(text = key,
-                    fontFamily = FontFamily.Serif,
-                    modifier = Modifier.padding(10.dp),
-                    color = Color.White,
-                    fontSize = DetailHeadline)
-            }
+            Text(text = sensorKey.toString(),
+                fontFamily = FontFamily.Serif,
+                modifier = Modifier.padding(10.dp),
+                color = Color.White,
+                fontSize = DetailHeadline)
+
         }
 
         //Sensor Data
-        if (sensorList != null) {
-
-            for(sensor in sensorList) {
-
+        if (sensor!= null) {
                 totalTemp += sensor.temp
                 totalHum += sensor.humi
 
@@ -76,11 +72,7 @@ fun ForestDetailPage(navigationController: NavHostController, key:String?) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(6.dp),
-                    border = BorderStroke(2.dp, Color.DarkGray),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color.Gray
-                    ),
-
+                    border = BorderStroke(2.dp, Color.DarkGray)
 
                 )
                 {
@@ -107,10 +99,7 @@ fun ForestDetailPage(navigationController: NavHostController, key:String?) {
                 Card(modifier = Modifier
                     .fillMaxWidth()
                     .padding(6.dp),
-                    border = BorderStroke(2.dp, Color.DarkGray),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color.Gray
-                    )
+                    border = BorderStroke(2.dp, Color.DarkGray)
 
                 )
                 {
@@ -132,7 +121,7 @@ fun ForestDetailPage(navigationController: NavHostController, key:String?) {
                         )
                     }
                 }
-            }
+
         }
 
         if (numberOfSensors is Int){
