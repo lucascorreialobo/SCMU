@@ -1,4 +1,3 @@
-#include <FirebaseClient.h>
 
 // The API key can be obtained from Firebase console > Project Overview > Project settings.
 #define API_KEY "AIzaSyDnhI7ErwlSY-T3j6z1EUt1tpNE7QSsWEQ"

@@ -9,8 +9,6 @@
   copies or substantial portions of the Software.
 */
 
-#include <WiFi.h>
-#include "time.h"
 
 // const char* ssid     = "NOS_Internet_4FC7";
 // const char* password = "67827246";
@@ -21,23 +19,14 @@ const int   daylightOffset_sec = 3600;
 
 void setup_Time(){
   // Connect to Wi-Fi
-  // Serial.print("Connecting to ");
-  // Serial.println(ssid);
-  // WiFi.begin(ssid, password);
-  // while (WiFi.status() != WL_CONNECTED) {
-  //   delay(500);
-  //   Serial.print(".");
-  // }
-  // Serial.println("");
-  // Serial.println("WiFi connected.");
+  setUpWifi();
   
   // Init and get the time
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
   // printLocalTime();
 
   //disconnect WiFi as it's no longer needed
-  // WiFi.disconnect(true);
-  // WiFi.mode(WIFI_OFF);
+  disconnect_WiFi();
 }
 
 struct tm printLocalTime(){

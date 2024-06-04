@@ -1,7 +1,3 @@
-
-#include <esp_now.h>
-#include <WiFi.h>
-
 // Global copy of Master
 #define NUMMASTER 1
 esp_now_peer_info_t master[NUMMASTER] = {};
@@ -177,7 +173,14 @@ void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
   snprintf(macStr, sizeof(macStr), "%02x:%02x:%02x:%02x:%02x:%02x",
            mac_addr[0], mac_addr[1], mac_addr[2], mac_addr[3], mac_addr[4], mac_addr[5]);
   Serial.print("Last Packet Sent to: "); Serial.println(macStr);
-  Serial.print("Last Packet Send Status: "); Serial.println(status == ESP_NOW_SEND_SUCCESS ? "Delivery Success" : "Delivery Fail");
+  Serial.print("Last Packet Send Status: ");
+  if(status == ESP_NOW_SEND_SUCCESS){
+    was_delivery_sucess = true;
+    Serial.println("Delivery Success");
+  }
+  else{
+    Serial.println("Delivery Fail");
+  }
 }
 
 // callback when data is recv from Master
@@ -190,9 +193,15 @@ void OnDataRecv(const uint8_t *mac_addr, const uint8_t *data, int data_len) {
   Serial.println("");
 }
 
+void getMacAddress(uint8_t *mac) {
+  WiFi.macAddress(mac);
+}
+
+
 uint8_t test_data = 0;
 void send_data(SensorData data) {
   test_data++;
+  getMacAddress(data.macAddress);
   for (int i = 0; i < MasterCnt; i++) {
     const uint8_t *peer_addr = master[i].peer_addr;
     Serial.print("Sending to peer addr: ");
@@ -203,7 +212,6 @@ void send_data(SensorData data) {
     esp_err_t result = esp_now_send(peer_addr, (uint8_t *) &data, sizeof(data));
     Serial.println("Send Status: ");
     if (result == ESP_OK) {
-      was_delivery_sucess = true;
       Serial.println("Success");
     } else if (result == ESP_ERR_ESPNOW_NOT_INIT) {
       // How did we get so far!!

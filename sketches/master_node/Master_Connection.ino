@@ -1,8 +1,3 @@
-
-#include <esp_now.h>
-//#include <WiFi.h>
-#include <esp_wifi.h>
-
 // Global copy of slave
 // #define NUMSLAVES 20
 esp_now_peer_info_t slaves[NUMSLAVES] = {};
@@ -34,17 +29,28 @@ void InitESPNow() {
 void setUpWifi() {
   WiFi.begin(ssid, password);
 
-  // Serial.print("Connecting to Wi-Fi");
-  // while (WiFi.status() != WL_CONNECTED)
-  // {
-  //     Serial.print(".");
-  //     delay(300);
-  // }
-  // Serial.println();
-  // Serial.print("Connected with IP: ");
-  // Serial.println(WiFi.localIP());
-  // Serial.println();
+  Serial.print("Connecting to Wi-Fi");
+  while (WiFi.status() != WL_CONNECTED)
+  {
+      Serial.print(".");
+      delay(300);
+  }
+  Serial.println();
+  Serial.print("Connected with IP: ");
+  Serial.println(WiFi.localIP());
+  Serial.println();
 
+}
+
+void disconnect_WiFi(){
+  Serial.print("Disconnecting from WiFi...");
+  WiFi.disconnect();
+  while (WiFi.status() == WL_CONNECTED)
+  {
+      Serial.print(".");
+      delay(300);
+  }
+  Serial.println("Disconnected from WiFi");
 }
 
 // config AP SSID
@@ -215,10 +221,10 @@ void OnDataRecv(const uint8_t *mac_addr, const uint8_t *data, int data_len) {
   if (data_len == sizeof(SensorData) && sensorDataCounter < NUMSLAVES) {
     // Cast the received data to SensorData struct
     SensorData *receivedData = (SensorData *)data;
-
     sensorDataArray[sensorDataCounter++] = *receivedData;
     
     // Print the received sensor data
+    Serial.print("MAC Address: "); printMacAddress(receivedData->macAddress);
     Serial.print("Temperature in Celsius: "); Serial.println(receivedData->temperatureC);
     Serial.print("Temperature in Fahrenheit: "); Serial.println(receivedData->temperatureF);
     Serial.print("Humidity: "); Serial.println(receivedData->humidity);
@@ -232,6 +238,16 @@ void OnDataRecv(const uint8_t *mac_addr, const uint8_t *data, int data_len) {
     Serial.println();
   }
   
+}
+
+void printMacAddress(const uint8_t* mac) {
+  for (int i = 0; i < 6; ++i) {
+    if (i != 0) {
+      Serial.print(":");
+    }
+    Serial.print(mac[i], 16);
+  }
+  Serial.println();
 }
 
 void setup_master_connection() {

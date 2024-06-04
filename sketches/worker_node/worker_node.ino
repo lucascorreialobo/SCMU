@@ -2,6 +2,10 @@
 #include <Arduino.h>
 #include "esp32/ulp.h"
 #include "driver/rtc_io.h"
+#include "soc/rtc_io_reg.h"
+#include <WiFi.h>
+#include "time.h"
+#include <FirebaseClient.h>
 
 #define DHT_PIN 27 //Digital pin connected to the DHT sensor
 #define MQ2_PIN 26
@@ -15,6 +19,7 @@ const char* password = "67827246";
 
 
 struct SensorData {
+  uint8_t macAddress[6]; // MAC address field
   float temperatureC; // temperature reading in Celsius
   float temperatureF; // temperature reading in Fahrenheit
   float humidity;    // humidity reading
@@ -22,7 +27,7 @@ struct SensorData {
   float windSpeed;
   float rain;
   bool isSmokeDanger; 
-  float FWI;
+  float local_FWI;
   struct tm timeinfo;
 };
 
@@ -34,8 +39,8 @@ void setup() {
   Serial.begin(9600);
   while (!Serial) {}  // wait for Serial to start
 
-  ulp_setup(); // it really only runs on the first ESP32 boot
-  set_fadeCycleDelay();
+  // ulp_setup(); // it really only runs on the first ESP32 boot
+  // set_fadeCycleDelay();
 
   setup_slave_connection();
   // start_DHT_sensor();
@@ -74,6 +79,7 @@ void setup() {
     start_sleep_for(TIME_TO_SLEEP);
   }
   else{
+    Serial.println("Starting Work");
     start_DHT_sensor();
   }
 }
@@ -81,8 +87,13 @@ void setup() {
 void loop() {
   
   unsigned long currentMillis = millis();
-  if (wasDeliverySuccessful() || currentMillis - previousMillis <= TIME_TO_WORK) {
+  if (currentMillis - previousMillis <= TIME_TO_WORK) {
     Serial.println("Working time is over. Entering Deep Sleep");
+    start_sleep_for(TIME_TO_SLEEP);
+  }
+
+  if(wasDeliverySuccessful()){
+    Serial.println("Sent data successfully. Entering Deep Sleep");
     start_sleep_for(TIME_TO_SLEEP);
   }
 

@@ -2,6 +2,8 @@
 #include "esp32/ulp.h"
 #include "driver/rtc_io.h"
 #include <WiFi.h>
+#include "time.h"
+#include <FirebaseClient.h>
 
 #define DHT_PIN 27 //Digital pin connected to the DHT sensor
 #define MQ2_PIN 14
@@ -16,6 +18,7 @@ const int TIME_TO_SIGNAL = 60 * 1000;
 int current_time_to = 0; 
 
 struct SensorData {
+  uint8_t macAddress[6]; // MAC address field
   float temperatureC; // temperature reading in Celsius
   float temperatureF; // temperature reading in Fahrenheit
   float humidity;    // humidity reading
@@ -23,12 +26,13 @@ struct SensorData {
   float windSpeed;
   float rain;
   bool isSmokeDanger; 
-  float FWI;
+  float local_FWI;
   struct tm timeinfo;
 };
 
-// Global copy of slave
+
 #define NUMSLAVES 20
+
 SensorData sensorDataArray[NUMSLAVES];
 int sensorDataCounter = 0;
 
@@ -89,6 +93,7 @@ void setup() {
     start_sleep_for(TIME_TO_SLEEP);
   }
   else{
+    Serial.println("Starting Work");
     start_DHT_sensor();
     FirebaseSetUp();
   }
@@ -102,6 +107,8 @@ void loop() {
     // Check if it's time to sleep
   if (currentMillis - previousMillis <= TIME_TO_WORK) {
     printSensorData();
+    delay(5000);
+    //send data to fire base
     delay(5000);
     Serial.println("Working time is over. Entering Deep Sleep");
     start_sleep_for(TIME_TO_SLEEP);
@@ -143,7 +150,7 @@ void printSensorData() {
         printf("Wind Speed: %.2f m/s\n", sensorDataArray[i].windSpeed);
         printf("Rain: %.2f mm\n", sensorDataArray[i].rain);
         printf("Smoke Danger: %s\n", sensorDataArray[i].isSmokeDanger ? "Yes" : "No");
-        printf("Fire Weather Index (FWI): %.2f\n", sensorDataArray[i].FWI);
+        printf("Fire Weather Index (FWI): %.2f\n", sensorDataArray[i].local_FWI);
         
         // Convert timeinfo to human-readable format
         char buffer[80];
@@ -153,5 +160,4 @@ void printSensorData() {
         printf("\n");
     }
 }
-
 
