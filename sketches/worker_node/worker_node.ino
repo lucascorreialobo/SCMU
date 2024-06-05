@@ -14,8 +14,10 @@ const int TIME_TO_SLEEP = 10;           /* Time ESP32 will go to sleep (in micro
 const int TIME_TO_WORK = 10 * 1000; //30
 const int TIME_TO_RCV_SIGNAL = 40 * 1000;
 
-const char* ssid     = "NOS_Internet_4FC7";
-const char* password = "67827246";
+const char* ssid     = "MEO-F59510";
+const char* password = "casadoslobos";
+// const char* ssid     = "NOS_Internet_4FC7";
+// const char* password = "67827246";
 
 
 struct SensorData {

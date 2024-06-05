@@ -23,7 +23,6 @@ struct SensorData get_sensor_data(){
   sensor_data.gas = gasValue;
   sensor_data.windSpeed = wind_speed_val;
   sensor_data.rain = rain_val;
-  sensor_data.timeinfo = printLocalTime();
   sensor_data.local_FWI = fwi_calc();
   sensor_data.isSmokeDanger = isDangerSmoke();
 
