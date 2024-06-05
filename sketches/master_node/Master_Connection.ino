@@ -1,8 +1,3 @@
-
-#include <esp_now.h>
-#include <WiFi.h>
-#include <esp_wifi.h>
-
 // Global copy of slave
 // #define NUMSLAVES 20
 esp_now_peer_info_t slaves[NUMSLAVES] = {};
@@ -32,8 +27,7 @@ void InitESPNow() {
 
 
 void setUpWifi() {
-  //WiFi.mode(WIFI_STA);
-  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  WiFi.begin(ssid, password);
 
   Serial.print("Connecting to Wi-Fi");
   while (WiFi.status() != WL_CONNECTED)
@@ -46,6 +40,17 @@ void setUpWifi() {
   Serial.println(WiFi.localIP());
   Serial.println();
 
+}
+
+void disconnect_WiFi(){
+  Serial.print("Disconnecting from WiFi...");
+  WiFi.disconnect();
+  while (WiFi.status() == WL_CONNECTED)
+  {
+      Serial.print(".");
+      delay(300);
+  }
+  Serial.println("Disconnected from WiFi");
 }
 
 // config AP SSID
@@ -111,6 +116,10 @@ void ScanForSlave() {
 
   // clean up ram
   WiFi.scanDelete();
+}
+
+bool wereSlavesFound(){
+  return SlaveCnt > 0;
 }
 
 // Check if the slave is already paired with the master.
@@ -212,10 +221,10 @@ void OnDataRecv(const uint8_t *mac_addr, const uint8_t *data, int data_len) {
   if (data_len == sizeof(SensorData) && sensorDataCounter < NUMSLAVES) {
     // Cast the received data to SensorData struct
     SensorData *receivedData = (SensorData *)data;
-
     sensorDataArray[sensorDataCounter++] = *receivedData;
     
     // Print the received sensor data
+    Serial.print("MAC Address: "); printMacAddress(receivedData->macAddress);
     Serial.print("Temperature in Celsius: "); Serial.println(receivedData->temperatureC);
     Serial.print("Temperature in Fahrenheit: "); Serial.println(receivedData->temperatureF);
     Serial.print("Humidity: "); Serial.println(receivedData->humidity);
@@ -224,12 +233,41 @@ void OnDataRecv(const uint8_t *mac_addr, const uint8_t *data, int data_len) {
   else{
     Serial.print("Received message: ");
     for (int i = 0; i < data_len; i++) {
-      Serial.print((char)incomingData[i]);
+      Serial.print((char)data[i]);
     }
     Serial.println();
   }
   
 }
+
+void printMacAddress(const uint8_t* mac) {
+  
+  for (int i = 0; i < 6; ++i) {
+    if (i != 0) {
+      Serial.print(":");
+    }
+    Serial.print(mac[i], 16);
+  }
+  Serial.println();
+}
+
+// Function to convert MAC address to string
+String macToString(const uint8_t* mac) {
+    String macStr = "";
+
+    for (int i = 0; i < 6; ++i) {
+        if (i != 0) {
+            macStr += ":";
+        }
+        // Convert each byte to hexadecimal and add it to the string
+        char hexBuffer[3]; // Two hex digits + null terminator
+        sprintf(hexBuffer, "%02X", mac[i]); // Convert to uppercase hex
+        macStr += hexBuffer;
+    }
+
+    return macStr;
+}
+
 
 void setup_master_connection() {
   //Set device in STA mode to begin with
@@ -250,7 +288,7 @@ void setup_master_connection() {
   // }
   // Serial.println("");
   // Serial.println("WiFi connected.");
-  setUpWifi();
+  // setUpWifi();
   
   // Init and get the time
   // configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
