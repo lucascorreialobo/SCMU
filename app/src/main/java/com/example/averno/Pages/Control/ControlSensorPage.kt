@@ -6,14 +6,16 @@ import java.net.HttpURLConnection
 import java.net.URL
 import kotlin.concurrent.thread
 
-fun sendSensorData(data:Int) {
+val ip = "192.168.4.1"
+fun sendSensorData(latitude: String, longitude: String) {
     thread {
         try {
-            val url = URL("http://192.168.1.101/") // Replace with your Arduino's IP address
+            val url = URL("http://$ip/") // Replace with your Arduino's IP address
 
             val json = JSONObject()
-            json.put("sensor", "temperature")
-            json.put("value", 25)
+            json.put("sensor", "coordinates")
+            json.put("latitude", latitude)
+            json.put("longitude", longitude)
 
             val jsonString = json.toString()
             val postData = jsonString.toByteArray()
