@@ -6,9 +6,6 @@ int SlaveCnt = 0;
 #define CHANNEL 1
 #define PRINTSCANRESULTS 0
 
-#define WIFI_SSID "LL"
-#define WIFI_PASSWORD "LucasL00"
-
 
 // Init ESP Now with fallback
 void InitESPNow() {
@@ -167,6 +164,9 @@ void manageSlave() {
   }
 }
 
+void getMacAddress(uint8_t *mac) {
+  WiFi.macAddress(mac);
+}
 
 uint8_t data = 0;
 // send data
@@ -213,9 +213,9 @@ void OnDataRecv(const uint8_t *mac_addr, const uint8_t *data, int data_len) {
   char macStr[18];
   snprintf(macStr, sizeof(macStr), "%02x:%02x:%02x:%02x:%02x:%02x",
            mac_addr[0], mac_addr[1], mac_addr[2], mac_addr[3], mac_addr[4], mac_addr[5]);
-  Serial.print("Last Packet Recv from: "); Serial.println(macStr);
-  Serial.print("Last Packet Recv Data: "); Serial.println(*data);
-  Serial.println("");
+  // Serial.print("Last Packet Recv from: "); Serial.println(macStr);
+  // Serial.print("Last Packet Recv Data: "); Serial.println(*data);
+  // Serial.println("");
 
    // Ensure the data length matches the size of SensorData
   if (data_len == sizeof(SensorData) && sensorDataCounter < NUMSLAVES) {
@@ -231,11 +231,11 @@ void OnDataRecv(const uint8_t *mac_addr, const uint8_t *data, int data_len) {
     Serial.print("Gas: "); Serial.println(receivedData->gas);
   }
   else{
-    Serial.print("Received message: ");
-    for (int i = 0; i < data_len; i++) {
-      Serial.print((char)data[i]);
-    }
-    Serial.println();
+    // Serial.print("Received message: ");
+    // for (int i = 0; i < data_len; i++) {
+    //   Serial.print((char)data[i]);
+    // }
+    // Serial.println();
   }
   
 }
