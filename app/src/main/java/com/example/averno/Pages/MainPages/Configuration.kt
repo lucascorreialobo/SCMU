@@ -11,7 +11,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
-import sendSensorData
 
 @Composable
 fun Configuration(){
@@ -23,18 +22,6 @@ fun Configuration(){
             horizontalAlignment = Alignment.CenterHorizontally) {
 
             Text(text = "Configuration", fontSize = 30.sp, color = Color.Green)
-
-            Button(onClick = {
-                sendSensorData(1)
-            }) {
-                Text(text = "Turn On")
-            }
-
-            Button(onClick = {
-                sendSensorData(0)
-            }) {
-                Text(text = "Turn Off")
-            }
         }
     }
 }

@@ -11,6 +11,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -56,16 +58,18 @@ fun ForestDetailPage(navigationController: NavHostController, key:String?) {
             }
         }
 
+        HorizontalDivider(thickness = 2.dp, color = Color.DarkGray)
+
         //Sensor Data
         if (sensorList != null) {
 
             for(sensor in sensorList) {
 
-                totalTemp += sensor.temp
+                totalTemp += sensor.tempC
                 totalHum += sensor.humi
 
                 //Identifier
-                Text(text = "Sensor: " + sensor.sensorId,
+                Text(text = "Sensor " + sensor.sensorId,
                     fontFamily = FontFamily.Serif,
                     modifier = Modifier.padding(10.dp),
                     color = Color.White,
@@ -94,7 +98,15 @@ fun ForestDetailPage(navigationController: NavHostController, key:String?) {
                         )
 
                         Text(
-                            text = "Current: " + sensor.temp,
+                            text = "Current: " + sensor.tempC + "ºC",
+                            fontFamily = FontFamily.Serif,
+                            modifier = Modifier.padding(10.dp),
+                            color = DetailTextColor,
+                            fontSize = DetailBody
+                        )
+
+                        Text(
+                            text = "Average: " + sensor.avgTemp + "ºC",
                             fontFamily = FontFamily.Serif,
                             modifier = Modifier.padding(10.dp),
                             color = DetailTextColor,
@@ -124,7 +136,15 @@ fun ForestDetailPage(navigationController: NavHostController, key:String?) {
                         )
 
                         Text(
-                            text = "Current: " + sensor.humi,
+                            text = "Current: " + sensor.humi + "%",
+                            fontFamily = FontFamily.Serif,
+                            modifier = Modifier.padding(10.dp),
+                            color = DetailTextColor,
+                            fontSize = DetailBody
+                        )
+
+                        Text(
+                            text = "Average: " + sensor.avgHumi + "%",
                             fontFamily = FontFamily.Serif,
                             modifier = Modifier.padding(10.dp),
                             color = DetailTextColor,
@@ -132,65 +152,29 @@ fun ForestDetailPage(navigationController: NavHostController, key:String?) {
                         )
                     }
                 }
+
+                HorizontalDivider(thickness = 2.dp, color = Color.DarkGray)
             }
         }
 
         if (numberOfSensors is Int){
-            Text(text = "Average temperature: " + totalTemp/numberOfSensors,
+            Text(text = "Current Forest Average:",
                 fontFamily = FontFamily.Serif,
                 modifier = Modifier.padding(10.dp),
                 color = Color.White,
                 fontSize = DetailTitle)
 
-            Text(text = "Average humidity: " + totalHum/numberOfSensors,
+            Text(text = "Temperature: " + (totalTemp/numberOfSensors).toInt() + "ºC",
                 fontFamily = FontFamily.Serif,
                 modifier = Modifier.padding(10.dp),
                 color = Color.White,
-                fontSize = DetailTitle)
+                fontSize = DetailBody)
+
+            Text(text = "Humidity: " + (totalHum/numberOfSensors).toInt() + "%",
+                fontFamily = FontFamily.Serif,
+                modifier = Modifier.padding(10.dp),
+                color = Color.White,
+                fontSize = DetailBody)
         }
-
-        /*
-        Card(modifier = Modifier
-            .fillMaxWidth()
-            .padding(6.dp),
-            border = BorderStroke(2.dp, Color.DarkGray)
-
-        )
-        {
-            Column {
-                Text(
-                    text = "Gas",
-                    fontFamily = FontFamily.Serif,
-                    modifier = Modifier.padding(10.dp),
-                    color = DetailTextColor,
-                    fontSize = DetailTitle
-                )
-
-                Text(
-                    text = "Max: " + f.details.maxGas.toString(),
-                    fontFamily = FontFamily.Serif,
-                    modifier = Modifier.padding(10.dp),
-                    color = DetailTextColor,
-                    fontSize = DetailBody
-                )
-
-                Text(
-                    text = "Min: " + f.details.minGas.toString(),
-                    fontFamily = FontFamily.Serif,
-                    modifier = Modifier.padding(10.dp),
-                    color = DetailTextColor,
-                    fontSize = DetailBody
-                )
-
-                Text(
-                    text = "Average: " + f.details.avgGas.toString(),
-                    fontFamily = FontFamily.Serif,
-                    modifier = Modifier.padding(10.dp),
-                    color = DetailTextColor,
-                    fontSize = DetailBody
-                )
-            }
-        }*/
-
     }
 }
