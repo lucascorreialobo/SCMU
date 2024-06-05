@@ -241,6 +241,7 @@ void OnDataRecv(const uint8_t *mac_addr, const uint8_t *data, int data_len) {
 }
 
 void printMacAddress(const uint8_t* mac) {
+  
   for (int i = 0; i < 6; ++i) {
     if (i != 0) {
       Serial.print(":");
@@ -249,6 +250,24 @@ void printMacAddress(const uint8_t* mac) {
   }
   Serial.println();
 }
+
+// Function to convert MAC address to string
+String macToString(const uint8_t* mac) {
+    String macStr = "";
+
+    for (int i = 0; i < 6; ++i) {
+        if (i != 0) {
+            macStr += ":";
+        }
+        // Convert each byte to hexadecimal and add it to the string
+        char hexBuffer[3]; // Two hex digits + null terminator
+        sprintf(hexBuffer, "%02X", mac[i]); // Convert to uppercase hex
+        macStr += hexBuffer;
+    }
+
+    return macStr;
+}
+
 
 void setup_master_connection() {
   //Set device in STA mode to begin with

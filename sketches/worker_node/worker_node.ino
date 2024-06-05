@@ -28,7 +28,6 @@ struct SensorData {
   float rain;
   bool isSmokeDanger; 
   float local_FWI;
-  struct tm timeinfo;
 };
 
 void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);

@@ -114,6 +114,7 @@ void firebase_code(){
 
   if (app.ready() && !taskComplete)
   {
+    sendDataOnArray();
 
     testFirebaseGetSend();
   }
@@ -121,3 +122,38 @@ void firebase_code(){
   
 }
 
+void sendDataOnArray() {
+
+  for(int i = 0; i < sensorDataCounter; i++){
+    SensorData temp = sensorDataArray[i];
+    String id = macToString(temp.macAddress);
+    String timeString = getFormattedTimeString(temp.timeInfo);
+
+
+    String devicePath = "/forests/" + forestID + "/" + id + "/" + timeString + "/";
+
+    Database.set<float>(aClient, )
+  }
+
+  // Database.set<int>(aClient, "/test/int", 22, asyncCB, "setIntTask");
+
+}
+
+String getFormattedTimeString(const struct tm *timeinfo) {
+    char buffer[30]; // Buffer to hold the formatted string
+    strftime(buffer, sizeof(buffer), "%d %B %Y %H:%M:%S", timeinfo);
+    return String(buffer);
+}
+
+// struct SensorData {
+//   uint8_t macAddress[6]; // MAC address field
+//   float temperatureC; // temperature reading in Celsius
+//   float temperatureF; // temperature reading in Fahrenheit
+//   float humidity;    // humidity reading
+//   float gas;
+//   float windSpeed;
+//   float rain;
+//   bool isSmokeDanger; 
+//   float local_FWI;
+//   struct tm timeinfo;
+// };

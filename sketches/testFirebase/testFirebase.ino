@@ -122,7 +122,7 @@ void loop()
         taskComplete = true;
 
         Database.get(aClient, "/forests/{}/{time}/", asyncCB, false, "getTask1");
-        Database.set<int>(aClient, "/test/int", 22, asyncCB, "setIntTask");
+        Database.set<int>(aClient, "/forests/Floresta da FCT/00:00:00:00:00:00/05 June 2024 01:58:29/", 22, asyncCB, "setIntTask");
 
         int time;
 

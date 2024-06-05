@@ -19,14 +19,14 @@ const int   daylightOffset_sec = 3600;
 
 void setup_Time(){
   // Connect to Wi-Fi
-  setUpWifi();
+  // setUpWifi();
   
   // Init and get the time
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
   // printLocalTime();
 
   //disconnect WiFi as it's no longer needed
-  disconnect_WiFi();
+  // disconnect_WiFi();
 }
 
 struct tm printLocalTime(){

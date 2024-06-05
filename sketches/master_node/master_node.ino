@@ -8,12 +8,14 @@
 #define DHT_PIN 27 //Digital pin connected to the DHT sensor
 #define MQ2_PIN 14
 
-const char* ssid     = "MEO-2B50B0";//"NOS_Internet_4FC7";
-const char* password = "93ebddd008";//"67827246";
+const char* ssid     = "MEO-F59510";//"NOS_Internet_4FC7";
+const char* password = "casadoslobos";//"67827246";
 
 const int TIME_TO_SLEEP = 10;           /* Time ESP32 will go to sleep (in microseconds); multiplied by above conversion to achieve seconds*/
 const int TIME_TO_WORK = 10 * 1000; // the duration that master is turned on
 const int TIME_TO_SIGNAL = 60 * 1000;
+
+String forestID = "Floresta da FCT";
 
 int current_time_to = 0; 
 
@@ -27,7 +29,6 @@ struct SensorData {
   float rain;
   bool isSmokeDanger; 
   float local_FWI;
-  struct tm timeinfo;
 };
 
 
@@ -87,10 +88,21 @@ void setup() {
     }
     currentMillis = millis();
   }
-  
+  start_DHT_sensor();
+  // setUpWifi();
+  // FirebaseSetUp();
   if(isSleepyTime){
+
+    sensorDataArray[sensorDataCounter++] = get_sensor_data();
+    printSensorData();
+    delay(5000);
+    //send data to fire base
+    // startAsyncFirebase();
+    firebase_code();
+
     Serial.println("Signaling time is over. Entering Deep Sleep");
     start_sleep_for(TIME_TO_SLEEP);
+
   }
   else{
     Serial.println("Starting Work");
@@ -106,20 +118,27 @@ void loop() {
 
     // Check if it's time to sleep
   if (currentMillis - previousMillis <= TIME_TO_WORK) {
+    sensorDataArray[sensorDataCounter++] = get_sensor_data();
     printSensorData();
     delay(5000);
     //send data to fire base
+    startAsyncFirebase();
+    firebase_code();
+
     delay(5000);
     Serial.println("Working time is over. Entering Deep Sleep");
     start_sleep_for(TIME_TO_SLEEP);
+
   }
 
   // ScanForSlave();
   manageSlave();
+
+  
   // if(wereSlavesFound()){
   //   current_time_to = TIME_TO_WORK;
-  //   startAsyncFirebase();
-  //   firebase_code();
+    // startAsyncFirebase();
+    // firebase_code();
   //   manageSlave();
   // }
   delay(1000);
@@ -152,10 +171,7 @@ void printSensorData() {
         printf("Smoke Danger: %s\n", sensorDataArray[i].isSmokeDanger ? "Yes" : "No");
         printf("Fire Weather Index (FWI): %.2f\n", sensorDataArray[i].local_FWI);
         
-        // Convert timeinfo to human-readable format
-        char buffer[80];
-        strftime(buffer, 80, "%Y-%m-%d %H:%M:%S", &sensorDataArray[i].timeinfo);
-        printf("Timestamp: %s\n", buffer);
+        
 
         printf("\n");
     }
