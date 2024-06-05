@@ -8,8 +8,8 @@
 #define DHT_PIN 27 //Digital pin connected to the DHT sensor
 #define MQ2_PIN 14
 
-const char* ssid     = "MEO-F59510";//"NOS_Internet_4FC7";
-const char* password = "casadoslobos";//"67827246";
+const char* ssid     = "NOS_Internet_4FC7";//"NOS_Internet_4FC7";
+const char* password = "67827246";//"67827246";
 
 const int TIME_TO_SLEEP = 10;           /* Time ESP32 will go to sleep (in microseconds); multiplied by above conversion to achieve seconds*/
 const int TIME_TO_WORK = 10 * 1000; // the duration that master is turned on
@@ -101,13 +101,12 @@ void setup() {
     firebase_code();
 
     Serial.println("Signaling time is over. Entering Deep Sleep");
+    Serial.flush();
     start_sleep_for(TIME_TO_SLEEP);
-
   }
   else{
     Serial.println("Starting Work");
     start_DHT_sensor();
-    FirebaseSetUp();
   }
   
 }
@@ -127,6 +126,7 @@ void loop() {
 
     delay(5000);
     Serial.println("Working time is over. Entering Deep Sleep");
+    Serial.flush();
     start_sleep_for(TIME_TO_SLEEP);
 
   }
@@ -162,6 +162,7 @@ void loop() {
 void printSensorData() {
     for (int i = 0; i < sensorDataCounter; i++) {
         printf("Sensor %d:\n", i + 1);
+        printf("MacAddress: "); printMacAddress(sensorDataArray[i].macAddress);
         printf("Temperature (C): %.2f\n", sensorDataArray[i].temperatureC);
         printf("Temperature (F): %.2f\n", sensorDataArray[i].temperatureF);
         printf("Humidity: %.2f%%\n", sensorDataArray[i].humidity);

@@ -1,4 +1,3 @@
-
 // The API key can be obtained from Firebase console > Project Overview > Project settings.
 #define API_KEY "AIzaSyDnhI7ErwlSY-T3j6z1EUt1tpNE7QSsWEQ"
 
@@ -28,6 +27,7 @@ AsyncClient aClient(ssl_client, getNetwork(network));
 RealtimeDatabase Database;
 
 bool taskComplete = false;
+bool infoSent = false; 
 
 void FirebaseSetUp(){
   Firebase.printf("Firebase Client v%s\n", FIREBASE_CLIENT_VERSION);
@@ -102,46 +102,68 @@ void printResult(AsyncResult &aResult)
     if (aResult.available())
     {
         Firebase.printf("task: %s, payload: %s\n", aResult.uid().c_str(), aResult.c_str());
+        infoSent = true;
     }
 }
 
 
 void firebase_code(){
+  setUpWifi();
+  FirebaseSetUp();
 
   if(!app.ready()){
     //Serial.println("App is not ready yet, please wait a bit.");
   }
 
-  if (app.ready() && !taskComplete)
-  {
-    sendDataOnArray();
+  while(!infoSent){
+    app.loop();
 
-    testFirebaseGetSend();
+    Database.loop();
+
+    if (app.ready() && !taskComplete)
+    {
+      sendDataOnArray();
+      // app.loop();
+
+      // Database.loop();
+      // testFirebaseGetSend();
+      // break;
+    }
   }
+
 
   
 }
 
 void sendDataOnArray() {
 
+  taskComplete = true;
+
+  // setUpWifi();
+  setup_Time();
+
   for(int i = 0; i < sensorDataCounter; i++){
     SensorData temp = sensorDataArray[i];
     String id = macToString(temp.macAddress);
-    String timeString = getFormattedTimeString(temp.timeInfo);
+    String timeString = getFormattedTimeString(printLocalTime()); 
 
 
     String devicePath = "/forests/" + forestID + "/" + id + "/" + timeString + "/";
 
-    Database.set<float>(aClient, )
+    Serial.println(devicePath);
+
+    float tempC = temp.temperatureC;
+
+    Database.set<float>(aClient, devicePath + "tempC", 22.0, asyncCB, "setTemperature");
   }
 
   // Database.set<int>(aClient, "/test/int", 22, asyncCB, "setIntTask");
-
+  // disconnect_WiFi();
 }
 
-String getFormattedTimeString(const struct tm *timeinfo) {
+String getFormattedTimeString(struct tm timeinfo) {
     char buffer[30]; // Buffer to hold the formatted string
-    strftime(buffer, sizeof(buffer), "%d %B %Y %H:%M:%S", timeinfo);
+    strftime(buffer, sizeof(buffer), "%d %B %Y %H:%M:%S", &timeinfo);
     return String(buffer);
 }
 

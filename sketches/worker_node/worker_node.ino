@@ -14,8 +14,8 @@ const int TIME_TO_SLEEP = 10;           /* Time ESP32 will go to sleep (in micro
 const int TIME_TO_WORK = 10 * 1000; //30
 const int TIME_TO_RCV_SIGNAL = 40 * 1000;
 
-const char* ssid     = "MEO-F59510";
-const char* password = "casadoslobos";
+const char* ssid     = "NOS_Internet_4FC7";
+const char* password = "67827246";
 // const char* ssid     = "NOS_Internet_4FC7";
 // const char* password = "67827246";
 
@@ -77,6 +77,7 @@ void setup() {
   
   if(isSleepyTime){
     Serial.println("Signaling time is over. Entering Deep Sleep");
+    Serial.flush();
     start_sleep_for(TIME_TO_SLEEP);
   }
   else{
@@ -93,17 +94,16 @@ void loop() {
     start_sleep_for(TIME_TO_SLEEP);
   }
 
-  if(wasDeliverySuccessful()){
-    Serial.println("Sent data successfully. Entering Deep Sleep");
-    start_sleep_for(TIME_TO_SLEEP);
-  }
-
   //handle_connection();
   // ScanForMaster();
   manageMaster();
   send_data(get_sensor_data());
-  delay(1000);
-
+  delay(2000);
+  if(wasDeliverySuccessful()){
+      Serial.println("Sent data successfully. Entering Deep Sleep");
+      Serial.flush();
+      start_sleep_for(TIME_TO_SLEEP);
+    }
 
   // unsigned long startTime = millis();
   // bool isSleepyTime = true;
