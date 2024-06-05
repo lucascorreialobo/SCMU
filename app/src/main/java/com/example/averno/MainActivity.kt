@@ -35,6 +35,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.averno.Pages.MainPages.Add
 import com.example.averno.Pages.MainPages.Configuration
 import com.example.averno.Pages.MainPages.Home
 import com.example.averno.ui.theme.AvernoTheme
@@ -99,13 +100,13 @@ fun MyBottomAppBar(){
 
                 ) {
                     FloatingActionButton(onClick = {
-                        Toast.makeText(
-                            context,
-                            "Open Bottom Sheet",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        selected.value = Icons.Default.Add
+                        navigationController.navigate(Screens.Add.screen){
+                            popUpTo(0)
+                        }
                     }) {
-                        Icon(Icons.Default.Add, contentDescription = null, tint = Color.Black)
+                        Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(30.dp),
+                            tint = if (selected.value == Icons.Default.Add) Color.White else Color.Black)
                     }
                 }
 
@@ -130,6 +131,7 @@ fun MyBottomAppBar(){
             modifier = Modifier.padding(paddingValues)){
             composable(Screens.Home.screen){ Home() }
             composable(Screens.Configuration.screen){ Configuration() }
+            composable(Screens.Add.screen){ Add() }
     }
 
     }

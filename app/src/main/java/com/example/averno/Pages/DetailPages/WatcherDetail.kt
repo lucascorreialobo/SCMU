@@ -57,7 +57,7 @@ fun WatcherDetailPage(navigationController: NavHostController, forestKey:String?
 
         //Sensor Data
         if (sensor!= null) {
-                totalTemp += sensor.temp
+                totalTemp += sensor.tempC
                 totalHum += sensor.humi
 
                 //Identifier
@@ -86,7 +86,7 @@ fun WatcherDetailPage(navigationController: NavHostController, forestKey:String?
                         )
 
                         Text(
-                            text = "Current: " + sensor.temp,
+                            text = "Current: " + sensor.tempC,
                             fontFamily = FontFamily.Serif,
                             modifier = Modifier.padding(10.dp),
                             color = DetailTextColor,

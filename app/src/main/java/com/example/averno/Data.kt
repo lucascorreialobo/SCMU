@@ -8,14 +8,13 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
-import com.google.firebase.database.getValue
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 data class SensorData(
     var sensorId: String = "0",
     val humi: Int = 0,
-    val temp: Int = 0,
+    val tempC: Int = 0,
     var avgHumi: Int = 0,
     var avgTemp: Int = 0,
 )
@@ -51,7 +50,7 @@ class ForestData: ViewModel(){
                         for (childSnapshot in timeSnapshot.children){
                             sensorData = childSnapshot.getValue(SensorData::class.java) ?: continue
                             sensorData.sensorId = timeSnapshot.key ?: continue
-                            sumTemp += sensorData.temp
+                            sumTemp += sensorData.tempC
                             sumHumi += sensorData.humi
                             totalTimestamps += 1
                             latestSnapshot = sensorData
