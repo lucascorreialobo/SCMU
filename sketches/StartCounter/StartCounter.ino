@@ -1,6 +1,5 @@
 #include <Preferences.h>
 #include <WiFi.h>
-#include <NetworkClient.h>
 #include <WiFiAP.h>
 #include <ArduinoJson.h>
 
