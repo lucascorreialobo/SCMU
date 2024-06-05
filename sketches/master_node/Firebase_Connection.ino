@@ -28,6 +28,7 @@ RealtimeDatabase Database;
 
 bool taskComplete = false;
 bool infoSent = false; 
+int tasksCompleted = 0;
 
 void FirebaseSetUp(){
   Firebase.printf("Firebase Client v%s\n", FIREBASE_CLIENT_VERSION);
@@ -102,7 +103,10 @@ void printResult(AsyncResult &aResult)
     if (aResult.available())
     {
         Firebase.printf("task: %s, payload: %s\n", aResult.uid().c_str(), aResult.c_str());
-        infoSent = true;
+        if(++tasksCompleted >= sensorDataCounter){
+          Serial.printf("%d tasks completed. %d to go", tasksCompleted, sensorDataCounter - tasksCompleted);
+          infoSent = true;
+        }
     }
 }
 

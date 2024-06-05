@@ -11,7 +11,7 @@
 #define MQ2_PIN 26
 
 const int TIME_TO_SLEEP = 10;           /* Time ESP32 will go to sleep (in microseconds); multiplied by above conversion to achieve seconds*/
-const int TIME_TO_WORK = 10 * 1000; //30
+const int TIME_TO_WORK = 20 * 1000; //30
 const int TIME_TO_RCV_SIGNAL = 40 * 1000;
 
 const char* ssid     = "NOS_Internet_4FC7";
@@ -50,21 +50,6 @@ void setup() {
   unsigned long currentMillis = millis();
   bool isSleepyTime = true;
 
-  // while(currentMillis - previousMillis >= TIME_TO_WORK){
-  //   ScanForMaster();
-  //   if(wasMasterFound()){
-  //     isSleepyTime = false;
-  //     break;
-  //   }
-  //   previousMillis = currentMillis;
-  // }
-
-  // if(isSleepyTime){
-  //   Serial.println("Entering in Deep Sleep");
-  //   start_sleep_for(TIME_TO_SLEEP);
-  // }
-  // From this point on, no code is executed in DEEP SLEEP mode
-
   while (currentMillis <= TIME_TO_RCV_SIGNAL) {
     ScanForMaster();
     if(wasMasterFound()){
@@ -89,36 +74,25 @@ void setup() {
 void loop() {
   
   unsigned long currentMillis = millis();
-  if (currentMillis - previousMillis <= TIME_TO_WORK) {
+  Serial.print("SHIIIIIIIIIIIIIT: ");
+  Serial.println(currentMillis - previousMillis);
+  Serial.print("TIME TO WORK: ");
+  Serial.println(TIME_TO_WORK);
+  if (currentMillis - previousMillis >= TIME_TO_WORK) {
     Serial.println("Working time is over. Entering Deep Sleep");
     start_sleep_for(TIME_TO_SLEEP);
   }
 
-  //handle_connection();
-  // ScanForMaster();
   manageMaster();
   send_data(get_sensor_data());
+
   delay(2000);
+
   if(wasDeliverySuccessful()){
       Serial.println("Sent data successfully. Entering Deep Sleep");
       Serial.flush();
       start_sleep_for(TIME_TO_SLEEP);
     }
-
-  // unsigned long startTime = millis();
-  // bool isSleepyTime = true;
-  // while (millis() - startTime < TIME_TO_SCAN_MASTER*1000) { // run while loop for 5000 milliseconds
-  //   ScanForMaster();
-  //   if (wasMasterFound()) {
-  //     isSleepyTime = false;
-  //     break;
-  //   }
-  // }
-
-  // if (isSleepyTime) {
-  //   Serial.println("Entering in Deep Sleep");
-  //   start_sleep_for(TIME_TO_SLEEP);
-  // }
 
   previousMillis = currentMillis;
 }

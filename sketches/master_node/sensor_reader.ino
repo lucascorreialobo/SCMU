@@ -26,10 +26,6 @@ struct SensorData get_sensor_data(){
   sensor_data.local_FWI = fwi_calc();
   sensor_data.isSmokeDanger = isDangerSmoke();
 
-  Serial.println("Sensor Data:");
-  Serial.print("Temp: "); Serial.println(sensor_data.temperatureC);
-  Serial.print("Hum: "); Serial.println(sensor_data.humidity);
-  Serial.print("Smoke/Gas: "); Serial.println(sensor_data.gas);
   return sensor_data;
 }
 
@@ -37,10 +33,6 @@ bool isDangerSmoke(){
    // Include logic to determine if smoke levels are indicative of a fire
   bool possible_fire = sensor_data.gas > SMOKE_THRESHOLD; // Define a suitable threshold based on calibration
 
-  // Print smoke level and fire warning
-  Serial.print("Smoke Level: ");
-  Serial.print(sensor_data.gas);
-  Serial.println(" ppm");
   if (possible_fire) {
     Serial.println("Warning: High smoke levels detected!");
   }
@@ -66,10 +58,7 @@ float fwi_calc(){
 
   // Calculate the FWI based on the components
   float FWI = calculateFWI(ISI, BUI);
-
-  // Output the result
-  Serial.print("FWI: ");
-  Serial.println(FWI);
+  
   return FWI;
 }
 

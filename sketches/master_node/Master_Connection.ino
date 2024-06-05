@@ -1,7 +1,6 @@
 // Global copy of slave
 // #define NUMSLAVES 20
 esp_now_peer_info_t slaves[NUMSLAVES] = {};
-int SlaveCnt = 0;
 
 #define CHANNEL 1
 #define PRINTSCANRESULTS 0
@@ -219,16 +218,11 @@ void OnDataRecv(const uint8_t *mac_addr, const uint8_t *data, int data_len) {
 
    // Ensure the data length matches the size of SensorData
   if (data_len == sizeof(SensorData) && sensorDataCounter < NUMSLAVES) {
-    // Cast the received data to SensorData struct
+
     SensorData *receivedData = (SensorData *)data;
     sensorDataArray[sensorDataCounter++] = *receivedData;
-    
-    // Print the received sensor data
-    Serial.print("MAC Address: "); printMacAddress(receivedData->macAddress);
-    Serial.print("Temperature in Celsius: "); Serial.println(receivedData->temperatureC);
-    Serial.print("Temperature in Fahrenheit: "); Serial.println(receivedData->temperatureF);
-    Serial.print("Humidity: "); Serial.println(receivedData->humidity);
-    Serial.print("Gas: "); Serial.println(receivedData->gas);
+    Serial.println("***** RECEIVED DATA ******");
+    printSensorData();
   }
   else{
     // Serial.print("Received message: ");
