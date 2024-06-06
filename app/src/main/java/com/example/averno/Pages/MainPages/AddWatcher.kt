@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.sp
 import sendSensorData
 
 @Composable
-fun Add(){
+fun AddWatcher(){
     Box(modifier = Modifier.fillMaxSize()){
         Column(modifier = Modifier
             .fillMaxSize()

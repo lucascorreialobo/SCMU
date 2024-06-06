@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.averno.ForestData
+import com.example.averno.GetFirebaseData
 import com.example.averno.R
 import com.example.averno.ui.theme.backgroundColor
 import com.example.averno.ui.theme.statusColor
@@ -35,14 +35,21 @@ import com.example.averno.ui.theme.statusColor
 @Composable
 fun ForestListPage(navigationController: NavHostController){
 
-    val viewModel: ForestData = viewModel()
-    val forestList by viewModel.forestData.collectAsState()
+    val viewModel: GetFirebaseData = viewModel()
+    val forestList by viewModel.forestSensorMap.collectAsState()
+    val forestData by viewModel.forestData.collectAsState()
 
-    val maxDanger = 0 //TODO change to dangerLevel
+    var maxDanger = 0f
+
+    for (data in forestData){
+        if(data.value.maxFWI > maxDanger){
+            maxDanger = data.value.maxFWI
+        }
+    }
 
     Column (modifier = Modifier
         .fillMaxSize()
-        .background(backgroundColor(maxDanger.toFloat())) //TODO change to dangerLevel
+        .background(backgroundColor(maxDanger))
         .verticalScroll(rememberScrollState())){
         Text(text = "Averno",
             fontFamily = FontFamily.Serif,
@@ -57,7 +64,7 @@ fun ForestListPage(navigationController: NavHostController){
                     .fillMaxSize()
                     .padding(4.dp),
                 shape = RoundedCornerShape(20),
-                colors = ButtonDefaults.buttonColors(containerColor = statusColor(0f)) //TODO change to dangerLevel
+                colors = ButtonDefaults.buttonColors(containerColor = statusColor(forestData[f.key]?.maxFWI))
             ) {
                 Row (Modifier.fillMaxWidth()){
                     Image(

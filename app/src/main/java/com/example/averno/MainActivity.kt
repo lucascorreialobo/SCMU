@@ -3,11 +3,9 @@ package com.example.averno
 import android.content.ContentValues
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,16 +29,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.averno.Pages.MainPages.Add
+import com.example.averno.Pages.MainPages.AddWatcher
 import com.example.averno.Pages.MainPages.Configuration
 import com.example.averno.Pages.MainPages.Home
 import com.example.averno.ui.theme.AvernoTheme
 import com.example.averno.ui.theme.BottomNavigationTabGreen
-import com.example.averno.ui.theme.backgroundColor
 
 
 class MainActivity : ComponentActivity() {
@@ -131,7 +127,7 @@ fun MyBottomAppBar(){
             modifier = Modifier.padding(paddingValues)){
             composable(Screens.Home.screen){ Home() }
             composable(Screens.Configuration.screen){ Configuration() }
-            composable(Screens.Add.screen){ Add() }
+            composable(Screens.Add.screen){ AddWatcher() }
     }
 
     }
