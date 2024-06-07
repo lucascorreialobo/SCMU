@@ -65,6 +65,8 @@ class MainActivity : ComponentActivity() {
                 Log.d("FCM", msg)
             }
     }
+
+
 }
 
 @Composable

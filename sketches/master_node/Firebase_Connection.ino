@@ -6,6 +6,8 @@
 #define USER_PASSWORD "Admin00"
 #define DATABASE_URL "https://averno-scmu-default-rtdb.europe-west1.firebasedatabase.app/"
 
+#define VALUES_PER_SENSOR 9
+
 #define FIREBASE_PROJECT_ID "averno-scmu"
 #define FIREBASE_CLIENT_EMAIL "firebase-adminsdk-a6wrc@averno-scmu.iam.gserviceaccount.com"
 const char PRIVATE_KEY[] PROGMEM = "-----BEGIN PRIVATE KEY-----\n\
@@ -172,10 +174,10 @@ void printResult(AsyncResult &aResult)
     if (aResult.available())
     {
         Firebase.printf("task: %s, payload: %s\n", aResult.uid().c_str(), aResult.c_str());
-        if(++tasksCompleted >= sensorDataCounter){
-          Serial.printf("%d tasks completed. %d to go", tasksCompleted, sensorDataCounter - tasksCompleted);
+        if(++tasksCompleted >= sensorDataCounter * VALUES_PER_SENSOR){
           infoSent = true;
         }
+        Serial.printf("%d tasks completed. %d to go", tasksCompleted, sensorDataCounter * VALUES_PER_SENSOR - tasksCompleted);
     }
 }
 
@@ -186,7 +188,7 @@ void printError(int code, const String &msg)
 
 void FCM_send_message(String title, String body){
   setUpWifi();
-  
+
   FCM_setup();
 
   while(!taskCompleted){
@@ -258,13 +260,24 @@ void sendDataOnArray() {
     String timeString = getFormattedTimeString(printLocalTime()); 
 
 
-    String devicePath = "/forests/" + forestID + "/" + id + "/" + timeString + "/";
+    String devicePath = "/forests/" + forestID + "/" + id + "/";
 
-    Serial.println(devicePath);
+    String timedDevicePath = devicePath + "data/" + timeString + "/";
+
+    Serial.println(timedDevicePath);
+
+    Database.set<String>(aClient, devicePath + "coordinates/latitude", temp.coordinates.latitude, asyncCB, "setLatitude");
+    Database.set<String>(aClient, devicePath + "coordinates/lonngitude", temp.coordinates.longitude, asyncCB, "setLongitude");
 
     float tempC = temp.temperatureC;
 
-    Database.set<float>(aClient, devicePath + "tempC", 22.0, asyncCB, "setTemperature");
+    Database.set<float>(aClient, timedDevicePath + "temperature (°C)",  22.0, asyncCB, "setTemperatureC");
+    Database.set<float>(aClient, timedDevicePath + "temperature (°F)",  22.0, asyncCB, "setTemperatureF");
+    Database.set<float>(aClient, timedDevicePath + "humidity",          22.0, asyncCB, "setHumidity");
+    Database.set<float>(aClient, timedDevicePath + "gas",               22.0, asyncCB, "setGas");
+    Database.set<float>(aClient, timedDevicePath + "wind speed",        22.0, asyncCB, "setWindSpeed");
+    Database.set<bool> (aClient, timedDevicePath + "smoke danger",     false, asyncCB, "setIsSmokeDanger");
+    Database.set<float>(aClient, timedDevicePath + "local FWI",         22.0, asyncCB, "setFWI");
   }
 
   // Database.set<int>(aClient, "/test/int", 22, asyncCB, "setIntTask");
@@ -355,7 +368,7 @@ void timeStatusCB(uint32_t &ts)
 
 String getFormattedTimeString(struct tm timeinfo) {
     char buffer[30]; // Buffer to hold the formatted string
-    strftime(buffer, sizeof(buffer), "%d %B %Y %H:%M:%S", &timeinfo);
+    strftime(buffer, sizeof(buffer), "%Y %m %d %H:%M:%S", &timeinfo);
     return String(buffer);
 }
 

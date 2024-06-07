@@ -151,4 +151,14 @@ void locationSetup(){
   preferences.end();
 }
 
+Coordinates getPreferencesCoordinates(){
+  preferences.begin("Averno", false);
+  
+  String latitude = preferences.getString("latitude");
+  String longitude = preferences.getString("longitude");
 
+  preferences.end();
+
+  return Coordinates(latitude, longitude);
+
+}

@@ -71,7 +71,6 @@ dependencies {
     implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.firebase.database)
     implementation(libs.firebase.messaging.ktx)
-    implementation(libs.firebase.messaging)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

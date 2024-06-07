@@ -20,8 +20,19 @@ const char* ssid     = "NOS_Internet_4FC7";
 const char* password = "67827246";
 
 
+struct Coordinates {
+  String latitude;
+  String longitude;
+  
+  // Default constructor
+  Coordinates() : latitude(""), longitude("") {}
+
+  Coordinates(String lat, String longi): latitude(lat), longitude(longi) {}
+};
+
 struct SensorData {
   uint8_t macAddress[6]; // MAC address field
+  Coordinates coordinates; 
   float temperatureC; // temperature reading in Celsius
   float temperatureF; // temperature reading in Fahrenheit
   float humidity;    // humidity reading
@@ -32,12 +43,6 @@ struct SensorData {
   float local_FWI;
 };
 
-struct Coordinates {
-  String latitude;
-  String longitude;
-
-  Coordinates(String lat, String longi): latitude(lat), longitude(longi) {}
-};
 
 void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);
 

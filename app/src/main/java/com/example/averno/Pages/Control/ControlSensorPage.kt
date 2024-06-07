@@ -37,6 +37,8 @@ fun sendSensorData(latitude: String, longitude: String) {
                 val response = StringBuilder()
                 var line: String?
 
+                
+
                 while (reader.readLine().also { line = it } != null) {
                     response.append(line)
                 }

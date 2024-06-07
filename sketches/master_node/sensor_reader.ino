@@ -17,6 +17,7 @@ struct SensorData get_sensor_data(){
   float rain_val = rand() % 51; // Rain value between 0 and 50 mm/h
 
   getMacAddress(sensor_data.macAddress);
+  sensor_data.coordinates = getPreferencesCoordinates();
   sensor_data.temperatureC = dht.temperatureC;
   sensor_data.temperatureF = dht.temperatureF;
   sensor_data.humidity = dht.humidity;
