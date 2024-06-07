@@ -1,4 +1,5 @@
 [versions]
+accompanistPermissions = "0.30.1"
 agp = "8.4.1"
 androidNetworking = "1.0.2"
 firebaseMessaging = "24.0.0"
@@ -12,17 +13,23 @@ activityCompose = "1.9.0"
 composeBom = "2024.05.00"
 fragmentKtx = "1.7.1"
 appcompat = "1.6.1"
+mapsCompose = "2.13.0"
 mapsKtx = "5.0.0"
 mapsUtilsKtx = "5.0.0"
 navigationRuntimeKtx = "2.7.7"
 navigationCompose = "2.7.7"
+osmdroidAndroid = "6.1.10"
+osmdroidMapsforge = "6.1.10"
+playServicesLocation = "21.3.0"
 playServicesMaps = "18.2.0"
+playServicesMapsVersion = "18.1.0"
 uiTextGoogleFonts = "1.6.7"
 googleGmsGoogleServices = "4.4.1"
 firebaseDatabase = "21.0.0"
 firebaseMessagingKtx = "24.0.0"
 
 [libraries]
+accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
 android-networking = { module = "com.amitshekhar.android:android-networking", version.ref = "androidNetworking" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 firebase-database-ktx = { module = "com.google.firebase:firebase-database-ktx" }
@@ -47,9 +54,14 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
 firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
 firebase-messaging-ktx = { group = "com.google.firebase", name = "firebase-messaging-ktx", version.ref = "firebaseMessagingKtx" }
+maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "mapsCompose" }
 maps-ktx = { module = "com.google.maps.android:maps-ktx", version.ref = "mapsKtx" }
 maps-utils-ktx = { module = "com.google.maps.android:maps-utils-ktx", version.ref = "mapsUtilsKtx" }
+osmdroid-android = { module = "org.osmdroid:osmdroid-android", version.ref = "osmdroidAndroid" }
+osmdroid-mapsforge = { module = "org.osmdroid:osmdroid-mapsforge", version.ref = "osmdroidMapsforge" }
+play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMaps" }
+play-services-maps-v1810 = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMapsVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

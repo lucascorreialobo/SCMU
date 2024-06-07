@@ -10,7 +10,7 @@ bool readHeaders_IsCorrectPOST(WiFiClient client, bool print = false){
 
     if (client.available()) {            // if there's bytes to read from the client,
       String line = client.readStringUntil('\n');
-      // Serial.println(line);
+      Serial.println(line);
 
       //check if it's a POST in /coordinates
       if( firstLine && !line.startsWith("POST /coordinates")){ 
