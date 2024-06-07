@@ -8,8 +8,10 @@
 #define DHT_PIN 27 //Digital pin connected to the DHT sensor
 #define MQ2_PIN 14
 
-const char* ssid     = "NOS_Internet_4FC7";//"NOS_Internet_4FC7";
-const char* password = "67827246";//"67827246";
+const char* ssid     = "MEO-F59510";
+const char* password = "casadoslobos";
+// const char* ssid     = "NOS_Internet_4FC7";//"NOS_Internet_4FC7";
+// const char* password = "67827246";//"67827246";
 
 const int TIME_TO_SLEEP = 10;           /* Time ESP32 will go to sleep (in microseconds); multiplied by above conversion to achieve seconds*/
 const int TIME_TO_WORK = 20 * 1000; // the duration that master is turned on
@@ -31,6 +33,12 @@ struct SensorData {
   float local_FWI;
 };
 
+struct Coordinates {
+  String latitude;
+  String longitude;
+
+  Coordinates(String lat, String longi): latitude(lat), longitude(longi) {}
+};
 
 #define NUMSLAVES 20
 
@@ -54,6 +62,9 @@ bool doManageSlave = false;
 void setup() {
   Serial.begin(9600);
   while (!Serial) {}  // wait for Serial to start
+
+  //Location setup cycle
+  locationSetup();
 
   ulp_setup(); // it really only runs on the first ESP32 boot
   set_fadeCycleDelay();
