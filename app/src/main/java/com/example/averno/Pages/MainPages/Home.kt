@@ -8,8 +8,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.averno.Pages.DetailPages.ForestDetailPage
 import com.example.averno.Pages.DetailPages.ForestListPage
-import com.example.averno.Pages.DetailPages.WatcherDetailPage
-import com.example.averno.Pages.DetailPages.WatcherListPage
 
 @Composable
 fun Home(){
@@ -28,21 +26,5 @@ fun Home(){
         ) { backStackEntry ->
             ForestDetailPage(navigationController, backStackEntry.arguments?.getString("forestId"))
         }
-
-        composable(
-            "watcher_list_page/{forestKey}",
-            arguments = listOf(navArgument("forestKey") {defaultValue = ""})
-        ) { backStackEntry ->
-            WatcherListPage(navigationController, backStackEntry.arguments?.getString("forestKey"))
-        }
-
-        composable(
-            "watcher_detail_page/{forestKey}/{sensorKey}",
-            arguments = listOf(navArgument("forestKey") {defaultValue = ""},
-                               navArgument("sensorKey") {defaultValue = 0})
-        ) { backStackEntry ->
-            WatcherDetailPage(navigationController, backStackEntry.arguments?.getString("forestKey"), backStackEntry.arguments?.getInt("sensorKey"))
-        }
-
     }
 }

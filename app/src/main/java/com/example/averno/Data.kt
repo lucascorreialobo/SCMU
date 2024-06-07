@@ -13,20 +13,37 @@ import kotlinx.coroutines.flow.StateFlow
 
 data class SensorData(
     var sensorId: String = "0",
-    val humi: Int = 0,
-    val tempC: Int = 0,
-    var avgHumi: Int = 0,
-    var avgTemp: Int = 0,
+    val humi: Float = 0f,
+    val tempC: Float = 0f,
+    val tempF: Float = 0f,
+    val gas: Float = 0f,
+    val windSpeed: Float = 0f,
+    val rain: Float = 0f,
+    val isSmokeDanger: String = "0",
+    val fwi: Float = 0f,
+)
+
+data class ForestData(
+    var avgHumi: Float = 0f,
+    var avgTempC: Float = 0f,
+    var avgTempF: Float = 0f,
+    val avgGas: Float = 0f,
+    val avgWindSpeed: Float = 0f,
+    val avgRain: Float = 0f,
+    val maxFWI: Float = 0f,
 )
 
 
-class ForestData: ViewModel(){
+class GetFirebaseData: ViewModel(){
 
     private val database = Firebase.database
     val myRef = database.getReference("forests")
 
-    private val _forestData = MutableStateFlow<Map<String, List<SensorData>>>(emptyMap())
-    val forestData: StateFlow<Map<String, List<SensorData>>> = _forestData
+    private val _forestSensorMap = MutableStateFlow<Map<String, List<SensorData>>>(emptyMap())
+    val forestSensorMap: StateFlow<Map<String, List<SensorData>>> = _forestSensorMap
+
+    private val _forestData = MutableStateFlow<Map<String, ForestData>>(emptyMap())
+    val forestData: StateFlow<Map<String, ForestData>> = _forestData
 
     init {
         fetchMessage()
@@ -36,33 +53,51 @@ class ForestData: ViewModel(){
     private fun fetchMessage() {
         myRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val dataMap = mutableMapOf<String, List<SensorData>>()
-                for (sensorSnapshot in snapshot.children) {
-                    val forestName = sensorSnapshot.key ?: continue
+                val sensorDataMap = mutableMapOf<String, List<SensorData>>()
+                for (forestSnapshot in snapshot.children) {
+                    val forestName = forestSnapshot.key ?: continue
                     val sensorList = mutableListOf<SensorData>()
                     var sensorData: SensorData
-                    var latestSnapshot = SensorData()
-                    var sumTemp = 0
-                    var sumHumi = 0
-                    var totalTimestamps = 0
-                    for (timeSnapshot in sensorSnapshot.children) {
-                        //latestSnapshot = timeSnapshot.child("1").getValue(SensorData::class.java) ?: continue
-                        for (childSnapshot in timeSnapshot.children){
-                            sensorData = childSnapshot.getValue(SensorData::class.java) ?: continue
-                            sensorData.sensorId = timeSnapshot.key ?: continue
-                            sumTemp += sensorData.tempC
-                            sumHumi += sensorData.humi
-                            totalTimestamps += 1
-                            latestSnapshot = sensorData
-                        }
-                        latestSnapshot.avgHumi = sumHumi/totalTimestamps
-                        latestSnapshot.avgTemp = sumTemp/totalTimestamps
-                        sensorList.add(latestSnapshot)
-                    }
+                    var amountOfSensors = 0
+                    val forestDataMap = mutableMapOf<String, ForestData>()
+                    for (sensorSnapshot in forestSnapshot.children) {
+                        sensorData = sensorSnapshot.children.toList().lastOrNull()?.getValue(SensorData::class.java) ?: continue
+                        sensorData.sensorId = sensorSnapshot.key ?: continue
+                        sensorList.add(sensorData)
 
-                    dataMap[forestName] = sensorList
+
+                        var sensorSums = Array<Float>(7) { 0f }
+
+                        //Use to calculate Forest info
+                        sensorSums[0] += sensorData.humi
+                        sensorSums[1] += sensorData.tempC
+                        sensorSums[2] += sensorData.tempF
+                        sensorSums[3] += sensorData.gas
+                        sensorSums[4] += sensorData.windSpeed
+                        sensorSums[5] += sensorData.rain
+                        if (sensorSums[6] < sensorData.fwi){
+                            sensorSums[6] = sensorData.fwi
+                        }
+                        amountOfSensors++;
+
+                        val newForest = ForestData(
+                            avgHumi = sensorSums[0]/amountOfSensors,
+                            avgTempC = sensorSums[1]/amountOfSensors,
+                            avgTempF = sensorSums[2]/amountOfSensors,
+                            avgGas = sensorSums[3]/amountOfSensors,
+                            avgWindSpeed = sensorSums[4]/amountOfSensors,
+                            avgRain = sensorSums[5]/amountOfSensors,
+                            maxFWI = sensorSums[6]
+
+                        )
+
+                        forestDataMap[forestName] = newForest
+                    }
+                    sensorDataMap[forestName] = sensorList
+                    _forestData.value = forestDataMap
                 }
-                _forestData.value = dataMap
+
+                _forestSensorMap.value = sensorDataMap
             }
 
             override fun onCancelled(error: DatabaseError) {

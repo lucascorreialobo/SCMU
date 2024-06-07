@@ -1,7 +1,6 @@
 package com.example.averno.ui.theme
 
 import androidx.compose.ui.graphics.Color
-import kotlin.math.pow
 
 
 val Purple80 = Color(0xFFD0BCFF)
@@ -18,7 +17,7 @@ val DetailTextColor = Color.Black
 
 //Return greener colours at lower danger levels and redder colours at higher danger levels
 //Danger level goes from 0 to 100
-fun statusColor(dangerLevel: Float): Color{
+fun statusColor(dangerLevel: Float?): Color{
     //change value (third argument) to change colour saturation
     return Color.hsv(getDangerColor(dangerLevel),0.9f, 0.65f)
 }
@@ -27,10 +26,14 @@ fun backgroundColor(dangerLevel: Float): Color {
     return Color.hsv(getDangerColor(dangerLevel),1f, 0.50f)
 }
 
-fun getDangerColor(dangerLevel: Float): Float{
-    var color = dangerLevel + 10
-    return if(color <= 90){
-        90 - color
+fun getDangerColor(dangerLevel: Float?): Float{
+    var color = 0f
+    if (dangerLevel != null){
+        color = dangerLevel * 100 +15
+    }
+
+    return if(color <= 85){
+        85 - color
     } else {
         0f
     }
