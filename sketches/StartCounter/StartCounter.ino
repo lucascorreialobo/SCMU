@@ -11,8 +11,6 @@ struct Coordinates {
   String longitude;
 
   Coordinates(String lat, String longi): latitude(lat), longitude(longi) {}
-
-
 };
 
 

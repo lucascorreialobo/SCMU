@@ -32,6 +32,13 @@ struct SensorData {
   float local_FWI;
 };
 
+struct Coordinates {
+  String latitude;
+  String longitude;
+
+  Coordinates(String lat, String longi): latitude(lat), longitude(longi) {}
+};
+
 void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);
 
 unsigned long previousMillis = 0;
@@ -39,6 +46,10 @@ unsigned long previousMillis = 0;
 void setup() {
   Serial.begin(9600);
   while (!Serial) {}  // wait for Serial to start
+
+
+  //Location setup cycle
+  locationSetup();
 
   // ulp_setup(); // it really only runs on the first ESP32 boot
   // set_fadeCycleDelay();

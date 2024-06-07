@@ -1,5 +1,15 @@
-const char *ssid = "yourAP";
-const char *password = "yourPassword";
+#include <Preferences.h>
+#include <WiFi.h>
+#include <WiFiAP.h>
+#include <ArduinoJson.h>
+
+Preferences preferences;
+
+
+
+const char *mySSID = "yourAP";
+const char *myPassword = "yourPassword";
+
 
 
 bool readHeaders_IsCorrectPOST(WiFiClient client, bool print = false){
@@ -61,7 +71,7 @@ Coordinates StartServer(){
   String longitude  = "";
   bool readCoordinates = false;
 
-  if (!WiFi.softAP(ssid, password)) {
+  if (!WiFi.softAP(mySSID, myPassword)) {
     log_e("Soft AP creation failed.");
     while (1);
   }
@@ -110,4 +120,35 @@ Coordinates StartServer(){
   server.close();
   return Coordinates(latitude, longitude);
 }
+
+
+void startupCycle() {
+  Coordinates location = StartServer();
+
+  preferences.putString("latitude", location.latitude);
+  preferences.putString("longitude", location.longitude);
+
+  Serial.println("Location setup finilized.");
+}
+
+
+void locationSetup(){
+  preferences.begin("Averno", false);
+
+  if(preferences.isKey("latitude") && preferences.isKey("longitude")) {
+    Serial.printf("The location for this device is already set at: (%s;%s)\n", preferences.getString("latitude"), preferences.getString("longitude"));
+  }
+
+  bool skipStartup = preferences.getBool("Skip Startup", false);
+
+  if(!skipStartup){
+    startupCycle();
+  }
+
+  preferences.putBool("Skip Startup", false); //by default set skip startup to false, if going to forced sleep set to true
+
+  // Close the Preferences
+  preferences.end();
+}
+
 
