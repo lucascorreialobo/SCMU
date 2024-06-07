@@ -6,6 +6,8 @@
 #include <WiFi.h>
 #include "time.h"
 #include <FirebaseClient.h>
+#include <HTTPClient.h>
+
 
 #define DHT_PIN 27 //Digital pin connected to the DHT sensor
 #define MQ2_PIN 26
@@ -16,8 +18,6 @@ const int TIME_TO_RCV_SIGNAL = 40 * 1000;
 
 const char* ssid     = "NOS_Internet_4FC7";
 const char* password = "67827246";
-// const char* ssid     = "NOS_Internet_4FC7";
-// const char* password = "67827246";
 
 
 struct SensorData {
@@ -40,11 +40,7 @@ void setup() {
   Serial.begin(9600);
   while (!Serial) {}  // wait for Serial to start
 
-  // ulp_setup(); // it really only runs on the first ESP32 boot
-  // set_fadeCycleDelay();
-
   setup_slave_connection();
-  // start_DHT_sensor();
 
 
   unsigned long currentMillis = millis();
@@ -53,7 +49,6 @@ void setup() {
   while (currentMillis <= TIME_TO_RCV_SIGNAL) {
     ScanForMaster();
     if(wasMasterFound()){
-      // current_time_to = TIME_TO_WORK;
       isSleepyTime = false;
       break;
     }

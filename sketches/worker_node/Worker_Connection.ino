@@ -26,14 +26,14 @@ void InitESPNow() {
 void setUpWifi() {
   WiFi.begin(ssid, password);
 
-  Serial.print("Connecting to Wi-Fi");
+  Serial.print("Connecting to WiFi...");
   while (WiFi.status() != WL_CONNECTED)
   {
       Serial.print(".");
       delay(300);
   }
   Serial.println();
-  Serial.print("Connected with IP: ");
+  Serial.print("WiFi Connected with IP: ");
   Serial.println(WiFi.localIP());
   Serial.println();
 
