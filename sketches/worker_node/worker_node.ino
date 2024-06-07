@@ -6,6 +6,8 @@
 #include <WiFi.h>
 #include "time.h"
 #include <FirebaseClient.h>
+#include <HTTPClient.h>
+
 
 #define DHT_PIN 27 //Digital pin connected to the DHT sensor
 #define MQ2_PIN 26
@@ -16,8 +18,6 @@ const int TIME_TO_RCV_SIGNAL = 40 * 1000;
 
 const char* ssid     = "NOS_Internet_4FC7";
 const char* password = "67827246";
-// const char* ssid     = "NOS_Internet_4FC7";
-// const char* password = "67827246";
 
 
 struct SensorData {
@@ -32,6 +32,13 @@ struct SensorData {
   float local_FWI;
 };
 
+struct Coordinates {
+  String latitude;
+  String longitude;
+
+  Coordinates(String lat, String longi): latitude(lat), longitude(longi) {}
+};
+
 void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);
 
 unsigned long previousMillis = 0;
@@ -39,6 +46,10 @@ unsigned long previousMillis = 0;
 void setup() {
   Serial.begin(9600);
   while (!Serial) {}  // wait for Serial to start
+
+
+  //Location setup cycle
+  locationSetup();
 
   // ulp_setup(); // it really only runs on the first ESP32 boot
   // set_fadeCycleDelay();

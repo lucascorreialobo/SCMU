@@ -4,20 +4,22 @@
 #include <WiFi.h>
 #include "time.h"
 #include <FirebaseClient.h>
+#include <HTTPClient.h>
 
 #define DHT_PIN 27 //Digital pin connected to the DHT sensor
 #define MQ2_PIN 14
 
-const char* ssid     = "NOS_Internet_4FC7";//"NOS_Internet_4FC7";
-const char* password = "67827246";//"67827246";
+const char* ssid     = "MEO-F59510";
+const char* password = "casadoslobos";
+// const char* ssid     = "NOS_Internet_4FC7";//"NOS_Internet_4FC7";
+// const char* password = "67827246";//"67827246";
 
 const int TIME_TO_SLEEP = 10;           /* Time ESP32 will go to sleep (in microseconds); multiplied by above conversion to achieve seconds*/
 const int TIME_TO_WORK = 20 * 1000; // the duration that master is turned on
-const int TIME_TO_SIGNAL = 60 * 1000;
+const int TIME_TO_SIGNAL = 10 * 1000;//60 * 1000;
 
 String forestID = "Floresta da FCT";
 
-int current_time_to = 0; 
 
 struct SensorData {
   uint8_t macAddress[6]; // MAC address field
@@ -31,6 +33,12 @@ struct SensorData {
   float local_FWI;
 };
 
+struct Coordinates {
+  String latitude;
+  String longitude;
+
+  Coordinates(String lat, String longi): latitude(lat), longitude(longi) {}
+};
 
 #define NUMSLAVES 20
 
@@ -46,21 +54,19 @@ void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);
 
 unsigned long previousMillis = 0;
 unsigned long previousSlaveScan = 0;
-const unsigned long slaveScanInterval = 5000;
-bool doScanSlave = true;
-const unsigned long manageSlaveInterval = 1000;
-bool doManageSlave = false;
 
 void setup() {
   Serial.begin(9600);
   while (!Serial) {}  // wait for Serial to start
+
+  //Location setup cycle
+  locationSetup();
 
   ulp_setup(); // it really only runs on the first ESP32 boot
   set_fadeCycleDelay();
 
   setup_master_connection();
   Serial.println(WiFi.localIP());
-  current_time_to = TIME_TO_SIGNAL;
 
   bool isSleepyTime = true;
   unsigned long currentMillis = millis();
@@ -74,15 +80,11 @@ void setup() {
     currentMillis = millis();
   }
   start_DHT_sensor();
-  // setUpWifi();
-  // FirebaseSetUp();
   if(isSleepyTime){
-
     sensorDataArray[sensorDataCounter++] = get_sensor_data();
     printSensorData();
     delay(5000);
     //send data to fire base
-    // startAsyncFirebase();
     firebase_code();
 
     Serial.println("Signaling time is over. Entering Deep Sleep");
@@ -91,7 +93,6 @@ void setup() {
   }
   else{
     Serial.println("Starting Work");
-    start_DHT_sensor();
   }
   
 }
@@ -107,7 +108,6 @@ void loop() {
     printSensorData();
     delay(5000);
     //send data to fire base
-    Serial.println("SENDING SHIT TO FIREBASE");
     firebase_code();
 
     delay(5000);
