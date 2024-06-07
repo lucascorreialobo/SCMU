@@ -35,7 +35,7 @@ import sendSensorData
 fun AddWatcher() {
     val context = LocalContext.current
     val locationProviderClient = remember { LocationServices.getFusedLocationProviderClient(context) }
-    val locationState = remember { mutableStateOf<Boolean>(false) }
+    val locationState = remember { mutableStateOf(false) }
     var latitude by remember { mutableDoubleStateOf(0.0) }
     var longitude by remember { mutableDoubleStateOf(0.0) }
 
@@ -76,7 +76,7 @@ fun AddWatcher() {
                 Spacer(modifier = Modifier.padding(10.dp))
 
                 Button(onClick = {
-                    sendSensorData(latitude.toString(), longitude.toString())
+                    sendSensorData(latitude.toString(), longitude.toString(), context)
                 }) {
                     Text(text = "Send")
                 }

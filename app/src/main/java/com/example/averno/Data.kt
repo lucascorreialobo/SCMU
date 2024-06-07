@@ -11,9 +11,13 @@ import com.google.firebase.database.database
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
+data class Coordinates(
+    val latitude: String = "0.0",
+    val longitude: String = "0.0",
+)
 data class SensorData(
     var sensorId: String = "0",
-    val humi: Float = 0f,
+    val humidity: Float = 0f,
     val tempC: Float = 0f,
     val tempF: Float = 0f,
     val gas: Float = 0f,
@@ -21,6 +25,7 @@ data class SensorData(
     val rain: Float = 0f,
     val isSmokeDanger: String = "0",
     val fwi: Float = 0f,
+    var coordinates: Coordinates = Coordinates(),
 )
 
 data class ForestData(
@@ -54,20 +59,24 @@ class GetFirebaseData: ViewModel(){
         myRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val sensorDataMap = mutableMapOf<String, List<SensorData>>()
+                val forestDataMap = mutableMapOf<String, ForestData>()
                 for (forestSnapshot in snapshot.children) {
                     val forestName = forestSnapshot.key ?: continue
                     val sensorList = mutableListOf<SensorData>()
-                    var sensorData: SensorData
                     var amountOfSensors = 0
                     val sensorSums = Array<Float>(7) { 0f }
-                    val forestDataMap = mutableMapOf<String, ForestData>()
                     for (sensorSnapshot in forestSnapshot.children) {
-                        sensorData = sensorSnapshot.children.toList().lastOrNull()?.getValue(SensorData::class.java) ?: continue
+                        val dataSnapshot = sensorSnapshot.child("data")
+                        val coordinatesSnapshot = sensorSnapshot.child("coordinates")
+
+                        val sensorData = dataSnapshot.children.toList().lastOrNull()?.getValue(SensorData::class.java) ?: continue
+                        val coordinatesData = coordinatesSnapshot.getValue(Coordinates::class.java) ?: continue
                         sensorData.sensorId = sensorSnapshot.key ?: continue
+                        sensorData.coordinates = coordinatesData
                         sensorList.add(sensorData)
 
                         //Use to calculate Forest info
-                        sensorSums[0] += sensorData.humi
+                        sensorSums[0] += sensorData.humidity
                         sensorSums[1] += sensorData.tempC
                         sensorSums[2] += sensorData.tempF
                         sensorSums[3] += sensorData.gas
@@ -77,24 +86,23 @@ class GetFirebaseData: ViewModel(){
                             sensorSums[6] = sensorData.fwi
                         }
                         amountOfSensors++;
-
-                        val newForest = ForestData(
-                            avgHumi = sensorSums[0]/amountOfSensors,
-                            avgTempC = sensorSums[1]/amountOfSensors,
-                            avgTempF = sensorSums[2]/amountOfSensors,
-                            avgGas = sensorSums[3]/amountOfSensors,
-                            avgWindSpeed = sensorSums[4]/amountOfSensors,
-                            avgRain = sensorSums[5]/amountOfSensors,
-                            maxFWI = sensorSums[6]
-
-                        )
-
-                        forestDataMap[forestName] = newForest
                     }
-                    sensorDataMap[forestName] = sensorList
-                    _forestData.value = forestDataMap
-                }
 
+                    val newForest = ForestData(
+                        avgHumi = sensorSums[0]/amountOfSensors,
+                        avgTempC = sensorSums[1]/amountOfSensors,
+                        avgTempF = sensorSums[2]/amountOfSensors,
+                        avgGas = sensorSums[3]/amountOfSensors,
+                        avgWindSpeed = sensorSums[4]/amountOfSensors,
+                        avgRain = sensorSums[5]/amountOfSensors,
+                        maxFWI = sensorSums[6]
+                    )
+
+                    forestDataMap[forestName] = newForest
+
+                    sensorDataMap[forestName] = sensorList
+                }
+                _forestData.value = forestDataMap
                 _forestSensorMap.value = sensorDataMap
             }
 
