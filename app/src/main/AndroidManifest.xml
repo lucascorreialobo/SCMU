@@ -33,9 +33,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="${MAPS_API_KEY}" />
+
     </application>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"
         tools:ignore="ManifestOrder" />
