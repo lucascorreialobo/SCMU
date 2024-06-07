@@ -228,6 +228,9 @@ uint8_t test_data = 0;
 void send_data(SensorData data) {
   test_data++;
   getMacAddress(data.macAddress);
+
+  // data.coordinates = getPreferencesCoordinates();
+
   for (int i = 0; i < MasterCnt; i++) {
     const uint8_t *peer_addr = master[i].peer_addr;
     Serial.print("Sending to peer addr: ");

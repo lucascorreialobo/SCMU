@@ -8,6 +8,8 @@
 #define DHT_PIN 27 //Digital pin connected to the DHT sensor
 #define MQ2_PIN 14
 
+
+
 const char* ssid     = "MEO-F59510";
 const char* password = "casadoslobos";
 // const char* ssid     = "NOS_Internet_4FC7";//"NOS_Internet_4FC7";
@@ -21,8 +23,20 @@ String forestID = "Floresta da FCT";
 
 int current_time_to = 0; 
 
+struct Coordinates {
+  String latitude;
+  String longitude;
+
+  // Default constructor
+  Coordinates() : latitude(""), longitude("") {}
+
+  Coordinates(String lat, String longi): latitude(lat), longitude(longi) {}
+};
+
+
 struct SensorData {
   uint8_t macAddress[6]; // MAC address field
+  Coordinates coordinates; 
   float temperatureC; // temperature reading in Celsius
   float temperatureF; // temperature reading in Fahrenheit
   float humidity;    // humidity reading
@@ -31,13 +45,6 @@ struct SensorData {
   float rain;
   bool isSmokeDanger; 
   float local_FWI;
-};
-
-struct Coordinates {
-  String latitude;
-  String longitude;
-
-  Coordinates(String lat, String longi): latitude(lat), longitude(longi) {}
 };
 
 #define NUMSLAVES 20
@@ -139,17 +146,18 @@ void loop() {
 void printSensorData() {
   Serial.println("******************* Printing collected sensor Data ******************************");
     for (int i = 0; i < sensorDataCounter; i++) {
-        printf("Sensor %d:\n", i + 1);
-        printf("MacAddress: "); printMacAddress(sensorDataArray[i].macAddress);
-        printf("Temperature (C): %.2f\n", sensorDataArray[i].temperatureC);
-        printf("Temperature (F): %.2f\n", sensorDataArray[i].temperatureF);
-        printf("Humidity: %.2f%%\n", sensorDataArray[i].humidity);
-        printf("Gas: %.2f\n", sensorDataArray[i].gas);
-        printf("Wind Speed: %.2f m/s\n", sensorDataArray[i].windSpeed);
-        printf("Rain: %.2f mm\n", sensorDataArray[i].rain);
-        printf("Smoke Danger: %s\n", sensorDataArray[i].isSmokeDanger ? "Yes" : "No");
-        printf("Fire Weather Index (FWI): %.2f\n", sensorDataArray[i].local_FWI);
-        
+        Serial.printf("Sensor %d:\n", i + 1);
+        Serial.printf("MacAddress: "); printMacAddress(sensorDataArray[i].macAddress);
+        Serial.printf("Location:\n\tLatitude: %s\n\tLongitude: %s.\n", sensorDataArray[i].coordinates.latitude, sensorDataArray[i].coordinates.longitude);
+        Serial.printf("Temperature (C): %.2f\n", sensorDataArray[i].temperatureC);
+        Serial.printf("Temperature (F): %.2f\n", sensorDataArray[i].temperatureF);
+        Serial.printf("Humidity: %.2f%%\n", sensorDataArray[i].humidity);
+        Serial.printf("Gas: %.2f\n", sensorDataArray[i].gas);
+        Serial.printf("Wind Speed: %.2f m/s\n", sensorDataArray[i].windSpeed);
+        Serial.printf("Rain: %.2f mm\n", sensorDataArray[i].rain);
+        Serial.printf("Smoke Danger: %s\n", sensorDataArray[i].isSmokeDanger ? "Yes" : "No");
+        Serial.printf("Fire Weather Index (FWI): %.2f\n", sensorDataArray[i].local_FWI);
+        Serial.
         printf("\n");
     }
   Serial.println("******************* END Printing collected sensor Data ******************************");

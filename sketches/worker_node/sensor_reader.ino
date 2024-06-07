@@ -10,9 +10,9 @@ float BUI = 20.0; // Example starting value
 float wind_speed_val = 5; // since we don't have such sensor we use constant
 float rain_val = 0; // since we don't have such sensor we use constant
 
-struct SensorData sensor_data;
+SensorData sensor_data;
 
-struct SensorData get_sensor_data(){
+SensorData get_sensor_data(){
   DHTData dht = get_DHT_values();
   int gasValue = get_MQ2_values();
 
