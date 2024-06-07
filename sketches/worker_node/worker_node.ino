@@ -6,6 +6,8 @@
 #include <WiFi.h>
 #include "time.h"
 #include <FirebaseClient.h>
+#include <HTTPClient.h>
+
 
 #define DHT_PIN 27 //Digital pin connected to the DHT sensor
 #define MQ2_PIN 26
@@ -16,8 +18,6 @@ const int TIME_TO_RCV_SIGNAL = 40 * 1000;
 
 const char* ssid     = "NOS_Internet_4FC7";
 const char* password = "67827246";
-// const char* ssid     = "NOS_Internet_4FC7";
-// const char* password = "67827246";
 
 
 struct Coordinates {

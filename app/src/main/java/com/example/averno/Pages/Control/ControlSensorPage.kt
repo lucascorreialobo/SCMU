@@ -10,10 +10,9 @@ val ip = "192.168.4.1"
 fun sendSensorData(latitude: String, longitude: String) {
     thread {
         try {
-            val url = URL("http://$ip/") // Replace with your Arduino's IP address
+            val url = URL("http://$ip/coordinates") // Replace with your Arduino's IP address
 
             val json = JSONObject()
-            json.put("sensor", "coordinates")
             json.put("latitude", latitude)
             json.put("longitude", longitude)
 

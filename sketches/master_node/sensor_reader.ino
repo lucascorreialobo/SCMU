@@ -7,21 +7,21 @@ float DC = 15.0;  // Example starting value
 float ISI = 5.0;  // Example starting value
 float BUI = 20.0; // Example starting value
 
-float wind_speed_val = 5; // since we don't have such sensor we use constant
-float rain_val = 0; // since we don't have such sensor we use constant
-
 struct SensorData sensor_data;
 
 struct SensorData get_sensor_data(){
   DHTData dht = get_DHT_values();
   int gasValue = get_MQ2_values();
 
+  float wind_speed_val = rand() % 101; // Wind speed between 0 and 100 km/h
+  float rain_val = rand() % 51; // Rain value between 0 and 50 mm/h
+
   getMacAddress(sensor_data.macAddress);
   sensor_data.coordinates = getPreferencesCoordinates();
   sensor_data.temperatureC = dht.temperatureC;
   sensor_data.temperatureF = dht.temperatureF;
   sensor_data.humidity = dht.humidity;
-  sensor_data.gas = gasValue;
+  sensor_data.gas = 400;//gasValue;
   sensor_data.windSpeed = wind_speed_val;
   sensor_data.rain = rain_val;
   sensor_data.local_FWI = fwi_calc();
@@ -36,6 +36,7 @@ bool isDangerSmoke(){
 
   if (possible_fire) {
     Serial.println("Warning: High smoke levels detected!");
+    sendNotification("Alert", "Sensor value exceeded threshold!");
   }
 
   return possible_fire;
