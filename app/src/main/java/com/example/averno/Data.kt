@@ -59,14 +59,12 @@ class GetFirebaseData: ViewModel(){
                     val sensorList = mutableListOf<SensorData>()
                     var sensorData: SensorData
                     var amountOfSensors = 0
+                    val sensorSums = Array<Float>(7) { 0f }
                     val forestDataMap = mutableMapOf<String, ForestData>()
                     for (sensorSnapshot in forestSnapshot.children) {
                         sensorData = sensorSnapshot.children.toList().lastOrNull()?.getValue(SensorData::class.java) ?: continue
                         sensorData.sensorId = sensorSnapshot.key ?: continue
                         sensorList.add(sensorData)
-
-
-                        var sensorSums = Array<Float>(7) { 0f }
 
                         //Use to calculate Forest info
                         sensorSums[0] += sensorData.humi

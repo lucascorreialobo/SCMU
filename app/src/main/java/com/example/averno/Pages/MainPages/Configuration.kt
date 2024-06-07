@@ -25,3 +25,24 @@ fun Configuration(){
         }
     }
 }
+
+/*@Composable
+fun GoogleMap(
+    mergeDescendants: Boolean = false,
+    modifier: Modifier = Modifier,
+    cameraPositionState: CameraPositionState = rememberCameraPositionState(),
+    contentDescription: String? = null,
+    googleMapOptionsFactory: () -> GoogleMapOptions = { GoogleMapOptions() },
+    properties: MapProperties = DefaultMapProperties,
+    locationSource: LocationSource? = null,
+    uiSettings: MapUiSettings = DefaultMapUiSettings,
+    indoorStateChangeListener: IndoorStateChangeListener = DefaultIndoorStateChangeListener,
+    onMapClick: (LatLng) -> Unit? = null,
+    onMapLongClick: (LatLng) -> Unit? = null,
+    onMapLoaded: () -> Unit? = null,
+    onMyLocationButtonClick: () -> Boolean? = null,
+    onMyLocationClick: (Location) -> Unit? = null,
+    onPOIClick: (PointOfInterest) -> Unit? = null,
+    contentPadding: PaddingValues = NoPadding,
+    content: @Composable () -> Unit? = null
+)*/

@@ -37,6 +37,7 @@ import com.example.averno.Pages.MainPages.Configuration
 import com.example.averno.Pages.MainPages.Home
 import com.example.averno.ui.theme.AvernoTheme
 import com.example.averno.ui.theme.BottomNavigationTabGreen
+import com.google.firebase.messaging.FirebaseMessaging
 
 
 class MainActivity : ComponentActivity() {
@@ -53,6 +54,16 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+        // Subscribe to a topic
+        FirebaseMessaging.getInstance().subscribeToTopic("sensor_alerts")
+            .addOnCompleteListener { task ->
+                var msg = "Subscribed to sensor_alerts topic"
+                if (!task.isSuccessful) {
+                    msg = "Subscription to sensor_alerts topic failed"
+                }
+                Log.d("FCM", msg)
+            }
     }
 }
 
