@@ -20,7 +20,7 @@ struct SensorData get_sensor_data(){
   sensor_data.temperatureC = dht.temperatureC;
   sensor_data.temperatureF = dht.temperatureF;
   sensor_data.humidity = dht.humidity;
-  sensor_data.gas = 400;//gasValue;
+  sensor_data.gas = gasValue;
   sensor_data.windSpeed = wind_speed_val;
   sensor_data.rain = rain_val;
   sensor_data.local_FWI = fwi_calc();
@@ -35,7 +35,8 @@ bool isDangerSmoke(){
 
   if (possible_fire) {
     Serial.println("Warning: High smoke levels detected!");
-    sendNotification("Alert", "Sensor value exceeded threshold!");
+    // sendNotification("Alert", "Sensor value exceeded threshold!");
+    FCM_send_message("Alert!", "Warning: High smoke levels detected!");
   }
 
   return possible_fire;
