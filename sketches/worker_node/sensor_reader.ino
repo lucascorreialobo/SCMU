@@ -46,7 +46,7 @@ bool isDangerSmoke(){
   Serial.println(" ppm");
   if (possible_fire) {
     Serial.println("Warning: High smoke levels detected!");
-    sendNotification("Alert", "Sensor value exceeded threshold!");
+    FCM_send_message("Alert!", "Warning: High smoke levels detected!");
   }
 
   return possible_fire;
