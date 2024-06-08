@@ -21,6 +21,7 @@ navigationCompose = "2.7.7"
 osmdroidAndroid = "6.1.10"
 osmdroidMapsforge = "6.1.10"
 playServicesLocation = "21.3.0"
+playServicesLocationVersion = "21.0.1"
 playServicesMaps = "18.2.0"
 playServicesMapsVersion = "18.1.0"
 uiTextGoogleFonts = "1.6.7"
@@ -60,6 +61,7 @@ maps-utils-ktx = { module = "com.google.maps.android:maps-utils-ktx", version.re
 osmdroid-android = { module = "org.osmdroid:osmdroid-android", version.ref = "osmdroidAndroid" }
 osmdroid-mapsforge = { module = "org.osmdroid:osmdroid-mapsforge", version.ref = "osmdroidMapsforge" }
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
+play-services-location-v2101 = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocationVersion" }
 play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMaps" }
 play-services-maps-v1810 = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMapsVersion" }
 
