@@ -7,6 +7,7 @@
 #include "time.h"
 #include <FirebaseClient.h>
 #include <HTTPClient.h>
+#include <math.h>
 
 
 #define DHT_PIN 27 //Digital pin connected to the DHT sensor
