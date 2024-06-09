@@ -267,17 +267,17 @@ void sendDataOnArray() {
     Serial.println(timedDevicePath);
 
     Database.set<String>(aClient, devicePath + "coordinates/latitude", temp.coordinates.latitude, asyncCB, "setLatitude");
-    Database.set<String>(aClient, devicePath + "coordinates/lonngitude", temp.coordinates.longitude, asyncCB, "setLongitude");
+    Database.set<String>(aClient, devicePath + "coordinates/longitude", temp.coordinates.longitude, asyncCB, "setLongitude");
 
     float tempC = temp.temperatureC;
 
-    Database.set<float>(aClient, timedDevicePath + "temperature (°C)",  22.0, asyncCB, "setTemperatureC");
-    Database.set<float>(aClient, timedDevicePath + "temperature (°F)",  22.0, asyncCB, "setTemperatureF");
-    Database.set<float>(aClient, timedDevicePath + "humidity",          22.0, asyncCB, "setHumidity");
-    Database.set<float>(aClient, timedDevicePath + "gas",               22.0, asyncCB, "setGas");
-    Database.set<float>(aClient, timedDevicePath + "wind speed",        22.0, asyncCB, "setWindSpeed");
-    Database.set<bool> (aClient, timedDevicePath + "smoke danger",     false, asyncCB, "setIsSmokeDanger");
-    Database.set<float>(aClient, timedDevicePath + "local FWI",         22.0, asyncCB, "setFWI");
+    Database.set<float>(aClient, timedDevicePath + "temperatureC",  22.0, asyncCB, "setTemperatureC");
+    Database.set<float>(aClient, timedDevicePath + "temperatureF",  22.0, asyncCB, "setTemperatureF");
+    Database.set<float>(aClient, timedDevicePath + "humidity",      22.0, asyncCB, "setHumidity");
+    Database.set<float>(aClient, timedDevicePath + "gas",           22.0, asyncCB, "setGas");
+    Database.set<float>(aClient, timedDevicePath + "windSpeed",     22.0, asyncCB, "setWindSpeed");
+    Database.set<bool> (aClient, timedDevicePath + "smokeDanger",  false, asyncCB, "setIsSmokeDanger");
+    Database.set<float>(aClient, timedDevicePath + "localFWI",      22.0, asyncCB, "setFWI");
   }
 
   // Database.set<int>(aClient, "/test/int", 22, asyncCB, "setIntTask");
