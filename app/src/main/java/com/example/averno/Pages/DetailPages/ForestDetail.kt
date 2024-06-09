@@ -117,7 +117,7 @@ fun ForestDetailPage(navigationController: NavHostController, key:String?) {
                         )
 
                         Info(title = "Temperature", value = sensor.tempC, unit = "ºC")
-                        Info(title = "Humidity", value = sensor.humi, unit = "%")
+                        Info(title = "Humidity", value = sensor.humidity, unit = "%")
                         Info(title = "Precipitation", value = sensor.rain, unit = "ºC")
                         Info(title = "Wind Speed", value = sensor.windSpeed, unit = "ºC")
                         Info(title = "Air quality", value = sensor.gas, unit = "ºC")
