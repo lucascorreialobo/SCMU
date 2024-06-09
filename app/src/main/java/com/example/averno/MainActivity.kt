@@ -75,7 +75,6 @@ fun MyBottomAppBar(){
     Log.d(ContentValues.TAG, "Failed to read value.")
 
     val navigationController = rememberNavController()
-    val context = LocalContext.current.applicationContext
     val selected = remember {
         mutableStateOf(Icons.Default.Home)
     }
