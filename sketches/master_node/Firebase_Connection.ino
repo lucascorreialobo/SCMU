@@ -255,8 +255,8 @@ void sendDataOnArray() {
   setup_Time();
 
   for(int i = 0; i < sensorDataCounter; i++){
-    SensorData sd = sensorDataArray[i];
-    String id = macToString(sd.macAddress);
+    SensorData temp = sensorDataArray[i];
+    String id = macToString(temp.macAddress);
     String timeString = getFormattedTimeString(printLocalTime()); 
 
 
@@ -266,8 +266,8 @@ void sendDataOnArray() {
 
     Serial.println(timedDevicePath);
 
-    Database.set<String>(aClient, devicePath + "coordinates/latitude", sd.coordinates.latitude, asyncCB, "setLatitude");
-    Database.set<String>(aClient, devicePath + "coordinates/lonngitude", sd.coordinates.longitude, asyncCB, "setLongitude");
+    Database.set<String>(aClient, devicePath + "coordinates/latitude", temp.coordinates.latitude, asyncCB, "setLatitude");
+    Database.set<String>(aClient, devicePath + "coordinates/lonngitude", temp.coordinates.longitude, asyncCB, "setLongitude");
 
     Database.set<float>(aClient, timedDevicePath + "temperatureC",  sd.temperatureC, asyncCB, "setTemperatureC");
     Database.set<float>(aClient, timedDevicePath + "temperatureF",  sd.temperatureF, asyncCB, "setTemperatureF");

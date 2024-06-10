@@ -109,17 +109,17 @@ fun ForestDetailPage(navigationController: NavHostController, key:String?) {
                         )
 
                         Text(
-                            text = "FWI: " + sensor.fwi,
+                            text = "FWI: " + sensor.local_fwi,
                             fontFamily = FontFamily.Serif,
                             modifier = Modifier.padding(10.dp),
                             color = DetailTextColor,
                             fontSize = DetailTitle
                         )
 
-                        Info(title = "Temperature", value = sensor.tempC, unit = "ºC")
+                        Info(title = "Temperature", value = sensor.temperatureC, unit = "ºC")
                         Info(title = "Humidity", value = sensor.humidity, unit = "%")
                         Info(title = "Precipitation", value = sensor.rain, unit = "ºC")
-                        Info(title = "Wind Speed", value = sensor.windSpeed, unit = "ºC")
+                        Info(title = "Wind Speed", value = sensor.wind_speed, unit = "ºC")
                         Info(title = "Air quality", value = sensor.gas, unit = "ºC")
 
                     }
