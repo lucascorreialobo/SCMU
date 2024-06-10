@@ -11,10 +11,10 @@
 
 
 
-const char* ssid     = "MEO-F59510";
-const char* password = "casadoslobos";
-// const char* ssid     = "NOS_Internet_4FC7";//"NOS_Internet_4FC7";
-// const char* password = "67827246";//"67827246";
+// const char* ssid     = "MEO-F59510";
+// const char* password = "casadoslobos";
+const char* ssid     = "NOS_Internet_4FC7";//"NOS_Internet_4FC7";
+const char* password = "67827246";//"67827246";
 
 const int TIME_TO_SLEEP = 10;           /* Time ESP32 will go to sleep (in microseconds); multiplied by above conversion to achieve seconds*/
 const int TIME_TO_WORK = 20 * 1000; // the duration that master is turned on
@@ -93,7 +93,7 @@ void setup() {
     delay(5000);
     //send data to fire base
     firebase_code();
-
+    delay(5000);
     Serial.println("Signaling time is over. Entering Deep Sleep");
     Serial.flush();
     start_sleep_for(TIME_TO_SLEEP);
