@@ -24,17 +24,14 @@ struct SensorData get_sensor_data(){
   DHTData dht = get_DHT_values();
   int gasValue = get_MQ2_values();
 
-  float wind_speed_val = rand() % 101; // Wind speed between 0 and 100 km/h
-  float rain_val = rand() % 51; // Rain value between 0 and 50 mm/h
-
   getMacAddress(sensor_data.macAddress);
   sensor_data.coordinates = getPreferencesCoordinates();
   sensor_data.temperatureC = isnan(dht.temperatureC) ? randomFloat(-10.0, 40.0) : dht.temperatureC;
   sensor_data.temperatureF = isnan(dht.temperatureF) ? sensor_data.temperatureC * (9.0 / 5.0) + 32.0 : dht.temperatureF;
   sensor_data.humidity = isnan(dht.humidity) ? randomFloat(0.0, 100.0) : dht.humidity;
   sensor_data.gas = isnan(gasValue) ? randomFloat(0.0, 10.0) : gasValue;
-  sensor_data.windSpeed = wind_speed_val;
-  sensor_data.rain = rain_val;
+  sensor_data.windSpeed = randomFloat(0.0, 100.0);
+  sensor_data.rain = randomFloat(0.0, 50.0);
   sensor_data.local_FWI = fwi_calc();
   sensor_data.isSmokeDanger = isDangerSmoke();
 
