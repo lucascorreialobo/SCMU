@@ -18,13 +18,13 @@ data class Coordinates(
 data class SensorData(
     var sensorId: String = "0",
     val humidity: Float = 0f,
-    val tempC: Float = 0f,
-    val tempF: Float = 0f,
+    val temperatureC: Float = 0f,
+    val temperatureF: Float = 0f,
     val gas: Float = 0f,
-    val windSpeed: Float = 0f,
+    val wind_speed: Float = 0f,
     val rain: Float = 0f,
-    val isSmokeDanger: String = "0",
-    val fwi: Float = 0f,
+    val smoke_danger: String = "0",
+    val local_fwi: Float = 0f,
     var coordinates: Coordinates = Coordinates(),
 )
 
@@ -77,13 +77,13 @@ class GetFirebaseData: ViewModel(){
 
                         //Use to calculate Forest info
                         sensorSums[0] += sensorData.humidity
-                        sensorSums[1] += sensorData.tempC
-                        sensorSums[2] += sensorData.tempF
+                        sensorSums[1] += sensorData.temperatureC
+                        sensorSums[2] += sensorData.temperatureF
                         sensorSums[3] += sensorData.gas
-                        sensorSums[4] += sensorData.windSpeed
+                        sensorSums[4] += sensorData.wind_speed
                         sensorSums[5] += sensorData.rain
-                        if (sensorSums[6] < sensorData.fwi){
-                            sensorSums[6] = sensorData.fwi
+                        if (sensorSums[6] < sensorData.local_fwi){
+                            sensorSums[6] = sensorData.local_fwi
                         }
                         amountOfSensors++;
                     }
