@@ -58,6 +58,7 @@ float fwi_calc(){
   float windSpeed = sensor_data.windSpeed;
   float rain = sensor_data.rain;
 
+  preferences.begin("Averno", false);
   // Calculate FWI components (simplified)
   // This requires proper formulas based on the Canadian Forest Fire Weather Index System
   float FFMC = calculateFFMC(preferences.getFloat("FFMC", DEFAULT_FFMC), temperature, humidity, windSpeed, rain);
@@ -68,6 +69,7 @@ float fwi_calc(){
 
   // Calculate the FWI based on the components
   float FWI = calculateFWI(ISI, BUI);
+  preferences.end();
 
   // Output the result
   Serial.print("FWI: ");
@@ -244,65 +246,3 @@ float calculateFWI(float ISI, float BUI) {
     return b;
   }
 }
-
-// float fwi_calc(){
-//   // Read sensors
-//   float temperature = sensor_data.temperatureC;
-//   float humidity = sensor_data.humidity;
-//   float windSpeed = sensor_data.windSpeed;
-//   float rain = sensor_data.rain;
-
-//   // Calculate FWI components (simplified)
-//   // This requires proper formulas based on the Canadian Forest Fire Weather Index System
-//   FFMC = calculateFFMC(FFMC, temperature, humidity, windSpeed);
-//   DMC = calculateDMC(DMC, temperature, humidity, rain);
-//   DC = calculateDC(DC, temperature, rain);
-//   ISI = calculateISI(ISI, windSpeed);
-//   BUI = calculateBUI(DMC, DC);
-
-//   // Calculate the FWI based on the components
-//   float FWI = calculateFWI(ISI, BUI);
-  
-//   return FWI;
-// }
-
-// float calculateFFMC(float prevFFMC, float temp, float rh, float wind) {
-//   float mo = 147.2 * (101.0 - prevFFMC) / (59.5 + prevFFMC);
-//   float Ed = 0.942 * pow(rh, 0.679) + 11 * exp((rh - 100) / 10.0) + 0.18 * (21.1 - temp) * (1 - 1 / exp(0.115 * rh));
-//   float Ew = 0.618 * pow(rh, 0.753) + 10 * exp((rh - 100) / 10.0) + 0.18 * (21.1 - temp) * (1 - 1 / exp(0.115 * rh));
-  
-//   float k1 = 0.424 * (1 - pow((100 - rh) / 100, 1.7)) + 0.0694 * sqrt(wind) * (1 - pow((100 - rh) / 100, 8));
-//   float k2 = 0.424 * (1 - pow((rh) / 100, 1.7)) + 0.0694 * sqrt(wind) * (1 - pow((rh) / 100, 8));
-  
-//   float m = mo + k1 * (Ew - mo) + k2 * (Ed - Ew);
-//   return 59.5 * (250.0 - m) / (147.2 + m);
-// }
-
-// float calculateDMC(float prevDMC, float temp, float rh, float rain) {
-//   float re = (rain > 1.5) ? (rain - 1.5) : 0;
-//   float Mo = 20 + exp(5.6348 - prevDMC / 43.43);
-//   float Mr = Mo + 1000 * re / (48.77 + prevDMC);
-//   float DMC = 244.72 - 43.43 * log(Mr - 20);
-//   return (rain > 1.5) ? DMC : prevDMC;
-// }
-
-// float calculateDC(float prevDC, float temp, float rain) {
-//   float re = (rain > 2.8) ? (rain - 2.8) : 0;
-//   float V = 0.36 * (temp + 2.8) + re;
-//   return prevDC + 0.5 * V;
-// }
-
-
-// float calculateISI(float ffmc, float wind) {
-//   float mo = 147.2 * (101.0 - ffmc) / (59.5 + ffmc);
-//   return 0.208 * exp(0.05039 * ffmc) * (1 + pow(wind, 0.5) / 25.0);
-// }
-
-// float calculateBUI(float DMC, float DC) {
-//   return (0.8 * DMC * DC) / (DMC + 0.4 * DC);
-// }
-
-// float calculateFWI(float ISI, float BUI) {
-//   float F = 0.1 * ISI * BUI;
-//   return F > 0 ? F / (0.1 + F) : 0;
-// }

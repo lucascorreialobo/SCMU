@@ -19,27 +19,25 @@ const float DEFAULT_BUI = 20.0; // Example starting value
 
 SensorData sensor_data;
 
-SensorData get_sensor_data(){
+float randomFloat(float min, float max) {
+    return random(min * 100, max * 100) / 100.0;
+}
+
+struct SensorData get_sensor_data(){
   DHTData dht = get_DHT_values();
   int gasValue = get_MQ2_values();
-
-  float wind_speed_val = rand() % 101; // Wind speed between 0 and 100 km/h
-  float rain_val = rand() % 51; // Rain value between 0 and 50 mm/h
-
-  //Set dht sensor values
-  sensor_data.temperatureC = dht.temperatureC;
-  sensor_data.temperatureF = dht.temperatureF;
-  sensor_data.humidity = dht.humidity;
-  sensor_data.gas = gasValue;
-  sensor_data.windSpeed = wind_speed_val;
-  sensor_data.rain = rain_val;
+  
+  getMacAddress(sensor_data.macAddress);
+  sensor_data.coordinates = getPreferencesCoordinates();
+  sensor_data.temperatureC = isnan(dht.temperatureC) ? randomFloat(-10.0, 40.0) : dht.temperatureC;
+  sensor_data.temperatureF = isnan(dht.temperatureF) ? sensor_data.temperatureC * (9.0 / 5.0) + 32.0 : dht.temperatureF;
+  sensor_data.humidity = isnan(dht.humidity) ? randomFloat(0.0, 100.0) : dht.humidity;
+  sensor_data.gas = isnan(gasValue) ? randomFloat(0.0, 10.0) : gasValue;
+  sensor_data.windSpeed = randomFloat(0.0, 100.0);
+  sensor_data.rain = randomFloat(0.0, 50.0);
   sensor_data.local_FWI = fwi_calc();
   sensor_data.isSmokeDanger = isDangerSmoke();
 
-  Serial.println("Sensor Data:");
-  Serial.print("Temp: "); Serial.println(sensor_data.temperatureC);
-  Serial.print("Hum: "); Serial.println(sensor_data.humidity);
-  Serial.print("Smoke/Gas: "); Serial.println(sensor_data.gas);
   return sensor_data;
 }
 
@@ -67,6 +65,7 @@ float fwi_calc(){
   float windSpeed = sensor_data.windSpeed;
   float rain = sensor_data.rain;
 
+  preferences.begin("Averno", false);
   // Calculate FWI components (simplified)
   // This requires proper formulas based on the Canadian Forest Fire Weather Index System
   float FFMC = calculateFFMC(preferences.getFloat("FFMC", DEFAULT_FFMC), temperature, humidity, windSpeed, rain);
@@ -77,6 +76,7 @@ float fwi_calc(){
 
   // Calculate the FWI based on the components
   float FWI = calculateFWI(ISI, BUI);
+  preferences.end();
 
   // Output the result
   Serial.print("FWI: ");
@@ -99,59 +99,41 @@ float fwi_calc(){
 }
 
 float calculateFFMC(float prevFFMC, float temp, float hum, float wind, float rain) {
+    float prev_mt = 147.2 * ((101.0 - prevFFMC)/(59.5 + prevFFMC));
   
-  float prev_mt = 147.2 * ((101 - prevFFMC)/(59.5 + prevFFMC));
-  
-  float mrt = 0;
-  if(rain > 0.5){
-    float pf = rain - 0.5;
-    mrt = prev_mt + 42.5 * pf * exp(-100/251 - prev_mt) * (1 - exp(-6.93 / pf));
-    if(prev_mt > 150){
-      mrt = mrt + 0.0015 * pow(prev_mt - 150, 2) * pow(pf, 0.5);
+    float mrt = prev_mt;
+    if(rain > 0.5){
+        float pf = rain - 0.5;
+        mrt = prev_mt + 42.5 * pf * exp((-100.0 + prev_mt) / 251.0) * (1.0 - exp(-6.93 / pf));
+        if(prev_mt > 150.0){
+            mrt = mrt + 0.0015 * pow(prev_mt - 150.0, 2) * pow(pf, 0.5);
+        }
     }
-  }
 
-  mrt = mrt > 250 ? 250 : mrt;
+    mrt = mrt > 250.0 ? 250.0 : mrt;
 
-  float ed = 0.942 * pow(hum, 0.679) + 11 * exp((hum - 100)/10) + 0.18 * (21.1 - temp) * (1 - exp(-0.115 * hum));
+    float ed = 0.942 * pow(hum, 0.679) + 11.0 * exp((hum - 100.0) / 10.0) + 0.18 * (21.1 - temp) * (1.0 - exp(-0.115 * hum));
 
-  float kd = 0;
-  float m = 0;
-  if(ed < prev_mt){
-    float ko = 0.424 * (1 - pow(hum/100, 1.7)) + 0.0694 * pow(wind, 0.5) * (1 - pow(hum/100, 8));
-    kd = ko * 0.581 * exp(0.0365 * temp);
-
-    m = ed + (prev_mt - ed) * pow(10, -kd);
-  }
-  else
-  {
-    float ew = 0.618 * pow(hum, 0.753) + 10 * exp((hum - 100)/10) + 0.18 / (21.1 - temp) * (1 - exp(-0.115 * hum));
-    if(ew > prev_mt){
-      float k1 = 0.424 * (1 - pow((100 - hum)/100, 1.7)) + 0.0694 * pow(wind, 0.5) * (1 - pow(hum/100, 8));
-      float kw = k1 * 0.581 * exp(0.0365* temp);
-
-      if( ew <= prev_mt && prev_mt <= ed){
-        m = prev_mt;
-      }
-      else{
-        m = ew - (ew - prev_mt) * pow(10, -kw);
-      }
+    float m = prev_mt;
+    if(ed < prev_mt){
+        float ko = 0.424 * (1.0 - pow(hum / 100.0, 1.7)) + 0.0694 * pow(wind, 0.5) * (1.0 - pow(hum / 100.0, 8.0));
+        float kd = ko * 0.581 * exp(0.0365 * temp);
+        m = ed + (prev_mt - ed) * pow(10.0, -kd);
+    } else {
+        float ew = 0.618 * pow(hum, 0.753) + 10.0 * exp((hum - 100.0) / 10.0) + 0.18 * (21.1 - temp) * (1.0 - exp(-0.115 * hum));
+        if(ew > prev_mt){
+            float k1 = 0.424 * (1.0 - pow((100.0 - hum) / 100.0, 1.7)) + 0.0694 * pow(wind, 0.5) * (1.0 - pow(hum / 100.0, 8.0));
+            float kw = k1 * 0.581 * exp(0.0365 * temp);
+            if(ew <= prev_mt && prev_mt <= ed){
+                m = prev_mt;
+            } else {
+                m = ew - (ew - prev_mt) * pow(10.0, -kw);
+            }
+        }
     }
-  }
 
-
-  float ffmc = 59.5 * ((250 - m)/(147.2 + m));
-  preferences.putFloat("FFMC", ffmc);
-  return ffmc;
-  // float mo = 147.2 * (101.0 - prevFFMC) / (59.5 + prevFFMC);
-  // float Ed = 0.942 * pow(rh, 0.679) + 11 * exp((rh - 100) / 10.0) + 0.18 * (21.1 - temp) * (1 - 1 / exp(0.115 * rh));
-  // float Ew = 0.618 * pow(rh, 0.753) + 10 * exp((rh - 100) / 10.0) + 0.18 * (21.1 - temp) * (1 - 1 / exp(0.115 * rh));
-  
-  // float k1 = 0.424 * (1 - pow((100 - rh) / 100, 1.7)) + 0.0694 * sqrt(wind) * (1 - pow((100 - rh) / 100, 8));
-  // float k2 = 0.424 * (1 - pow((rh) / 100, 1.7)) + 0.0694 * sqrt(wind) * (1 - pow((rh) / 100, 8));
-  
-  // float m = mo + k1 * (Ew - mo) + k2 * (Ed - Ew);
-  // return 59.5 * (250.0 - m) / (147.2 + m);
+    float ffmc = 59.5 * ((250.0 - m) / (147.2 + m));
+    return ffmc;
 }
 
 float calc_b(float prevDMC){
@@ -234,13 +216,11 @@ float calculateDC(float prevDC, float temp, float rain) {
 
 float calculateISI(float FFMC, float wind) {
 
-  float fu = exp(0.05039 - wind);
+  float fu = exp(0.05039 * wind);
   float m = 147.2 * ((101 - FFMC)/(59.5 + FFMC));
   float ff = (91.9 * exp(-0.1386 * m)) * (1 + (pow(m, 5.31)/(4.93 * pow(10, 7))));
 
   return 0.208 * fu * ff;
-  // float mo = 147.2 * (101.0 - ffmc) / (59.5 + ffmc);
-  // return 0.208 * exp(0.05039 * ffmc) * (1 + pow(wind, 0.5) / 25.0);
 }
 
 float calculateBUI(float DMC, float DC) {
@@ -254,6 +234,10 @@ float calculateBUI(float DMC, float DC) {
 }
 
 float calculateFWI(float ISI, float BUI) {
+  Serial.print("ISI: ");
+  Serial.println(ISI);
+  Serial.print("BUI: ");
+  Serial.println(BUI);
   float fd = 0;
   if(BUI <= 80){
     fd = 0.626 * pow(BUI, 0.809) + 2;
@@ -268,7 +252,5 @@ float calculateFWI(float ISI, float BUI) {
   else{
     return b;
   }
-  // float F = 0.1 * ISI * BUI;
-  // return F > 0 ? F / (0.1 + F) : 0;
 }
 

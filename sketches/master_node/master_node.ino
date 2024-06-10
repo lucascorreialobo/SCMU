@@ -1,5 +1,4 @@
 #include <esp_now.h>
-#include "esp32/ulp.h"
 #include "driver/rtc_io.h"
 #include <WiFi.h>
 #include "time.h"
@@ -23,7 +22,7 @@ const char *myPassword = "yourPassword";
 
 const int TIME_TO_SLEEP = 10;           /* Time ESP32 will go to sleep (in microseconds); multiplied by above conversion to achieve seconds*/
 const int TIME_TO_WORK = 20 * 1000; // the duration that master is turned on
-const int TIME_TO_SIGNAL = 10 * 1000;//60 * 1000;
+const int TIME_TO_SIGNAL = 60 * 1000;//10 * 1000;
 
 String forestID = "Floresta de Monsanto";
 
@@ -48,7 +47,7 @@ struct SensorData {
   float gas;
   float windSpeed;
   float rain;
-  bool isSmokeDanger; 
+  bool isSmokeDanger;
   float local_FWI;
 };
 
@@ -75,9 +74,6 @@ void setup() {
   //Location setup cycle
   // locationSetup();
   checkActuators(20);
-
-  ulp_setup(); // it really only runs on the first ESP32 boot
-  set_fadeCycleDelay();
 
   setup_master_connection();
   Serial.println(WiFi.localIP());
@@ -108,10 +104,10 @@ void setup() {
   else{
     Serial.println("Starting Work");
   }
-  
+
 }
 
-void loop() {  
+void loop() {
 
   unsigned long currentMillis = millis();
 
@@ -158,4 +154,3 @@ void printSensorData() {
     }
   Serial.println("******************* END Printing collected sensor Data ******************************");
 }
-

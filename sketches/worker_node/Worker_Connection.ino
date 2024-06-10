@@ -167,18 +167,6 @@ void manageMaster() {
 void setup_slave_connection(){
   WiFi.mode(WIFI_AP);
 
-  // WiFi.begin(ssid, password);
-  // while (WiFi.status() != WL_CONNECTED) {
-  //   delay(500);
-  //   Serial.print(".");
-  // }
-  // Serial.println("");
-  // Serial.println("WiFi connected.");
-  
-  // Init and get the time
-  // configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
-  // setup_Time();
-
   // configure device AP mode
   configSlaveDeviceAP();
   // This is the mac address of the Slave in AP Mode
@@ -227,9 +215,6 @@ void getMacAddress(uint8_t *mac) {
 uint8_t test_data = 0;
 void send_data(SensorData data) {
   test_data++;
-  getMacAddress(data.macAddress);
-
-  // data.coordinates = getPreferencesCoordinates();
 
   for (int i = 0; i < MasterCnt; i++) {
     const uint8_t *peer_addr = master[i].peer_addr;
