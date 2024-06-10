@@ -30,7 +30,7 @@ struct SensorData get_sensor_data(){
   getMacAddress(sensor_data.macAddress);
   sensor_data.coordinates = getPreferencesCoordinates();
   sensor_data.temperatureC = isnan(dht.temperatureC) ? randomFloat(-10.0, 40.0) : dht.temperatureC;
-  sensor_data.temperatureF = isnan(dht.temperatureF) ? randomFloat(14.0, 104.0) : dht.temperatureF;
+  sensor_data.temperatureF = isnan(dht.temperatureF) ? sensor_data.temperatureC * (9.0 / 5.0) + 32.0 : dht.temperatureF;
   sensor_data.humidity = isnan(dht.humidity) ? randomFloat(0.0, 100.0) : dht.humidity;
   sensor_data.gas = isnan(gasValue) ? randomFloat(0.0, 10.0) : gasValue;
   sensor_data.windSpeed = wind_speed_val;
