@@ -29,7 +29,7 @@ fun backgroundColor(dangerLevel: Float): Color {
 fun getDangerColor(dangerLevel: Float?): Float{
     var color = 0f
     if (dangerLevel != null){
-        color = dangerLevel * 100 +15
+        color = dangerLevel
     }
 
     return if(color <= 85){

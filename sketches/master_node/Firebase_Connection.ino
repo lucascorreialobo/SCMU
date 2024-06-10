@@ -275,8 +275,8 @@ void sendDataOnArray() {
     Database.set<float>(aClient, timedDevicePath + "gas",           sd.gas, asyncCB, "setGas");
     Database.set<float>(aClient, timedDevicePath + "wind_speed",    sd.windSpeed, asyncCB, "setWindSpeed");
     Database.set<float>(aClient, timedDevicePath + "rain",          sd.rain, asyncCB, "setRain");
-    Database.set<bool> (aClient, timedDevicePath + "smoke_danger",   sd.isSmokeDanger, asyncCB, "setIsSmokeDanger");
-    Database.set<float>(aClient, timedDevicePath + "local_fwi",      sd.local_FWI, asyncCB, "setFWI");
+    Database.set<bool> (aClient, timedDevicePath + "smoke_danger",  sd.isSmokeDanger, asyncCB, "setIsSmokeDanger");
+    Database.set<float>(aClient, timedDevicePath + "local_fwi",     sd.local_FWI, asyncCB, "setFWI");
 
     // Database.set<bool> (aClient, timedDevicePath + "smokeDanger",  false, asyncCB, "setIsSmokeDanger");
     // Database.set<float>(aClient, timedDevicePath + "localFWI",      22.0, asyncCB, "setFWI");

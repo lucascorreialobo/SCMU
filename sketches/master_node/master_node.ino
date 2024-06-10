@@ -9,18 +9,23 @@
 #define DHT_PIN 27 //Digital pin connected to the DHT sensor
 #define MQ2_PIN 14
 
+#define BUZZZER_PIN  16 // ESP32 pin GPIO4 connected to piezo buzzer
 
 
-// const char* ssid     = "MEO-F59510";
-// const char* password = "casadoslobos";
-const char* ssid     = "NOS_Internet_4FC7";//"NOS_Internet_4FC7";
-const char* password = "67827246";//"67827246";
+
+const char* ssid     = "MEO-F59510";
+const char* password = "casadoslobos";
+// const char* ssid     = "NOS_Internet_4FC7";//"NOS_Internet_4FC7";
+// const char* password = "67827246";//"67827246";
+
+const char *mySSID = "yourAP";
+const char *myPassword = "yourPassword";
 
 const int TIME_TO_SLEEP = 10;           /* Time ESP32 will go to sleep (in microseconds); multiplied by above conversion to achieve seconds*/
 const int TIME_TO_WORK = 20 * 1000; // the duration that master is turned on
 const int TIME_TO_SIGNAL = 10 * 1000;//60 * 1000;
 
-String forestID = "Floresta da FCT";
+String forestID = "Floresta de Monsanto";
 
 
 struct Coordinates {
@@ -65,9 +70,11 @@ unsigned long previousSlaveScan = 0;
 void setup() {
   Serial.begin(9600);
   while (!Serial) {}  // wait for Serial to start
+  pinMode(BUZZZER_PIN, OUTPUT);
 
   //Location setup cycle
   // locationSetup();
+  checkActuators(20);
 
   ulp_setup(); // it really only runs on the first ESP32 boot
   set_fadeCycleDelay();

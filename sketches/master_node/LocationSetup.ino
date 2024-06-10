@@ -6,12 +6,6 @@
 Preferences preferences;
 
 
-
-const char *mySSID = "yourAP";
-const char *myPassword = "yourPassword";
-
-
-
 bool readHeaders_IsCorrectPOST(WiFiClient client, bool print = false){
   int contentLenght = 0;
   bool firstLine = true;
