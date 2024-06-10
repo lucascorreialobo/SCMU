@@ -10,14 +10,15 @@ import java.net.URL
 import kotlin.concurrent.thread
 
 val ip = "192.168.4.1"
-fun sendSensorData(latitude: String, longitude: String, context: Context) {
+fun sendSensorData(infoMap: Map<String, String>, context: Context) {
     thread {
         try {
             val url = URL("http://$ip/coordinates") // Replace with your Arduino's IP address
 
             val json = JSONObject()
-            json.put("latitude", latitude)
-            json.put("longitude", longitude)
+            for(info in infoMap){
+                json.put(info.key, info.value)
+            }
 
             val jsonString = json.toString()
             val postData = jsonString.toByteArray()
@@ -43,7 +44,7 @@ fun sendSensorData(latitude: String, longitude: String, context: Context) {
                 var line: String?
                 Looper.prepare()
 
-                Toast.makeText(context, "Coordinates sent successfully.", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "Operation done successfully.", Toast.LENGTH_LONG).show()
 
                 while (reader.readLine().also { line = it } != null) {
                     response.append(line)
