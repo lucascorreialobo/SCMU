@@ -6,84 +6,56 @@ import android.net.wifi.WifiManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.google.android.gms.location.LocationServices
+import sendSensorData
 
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun Configuration() {
     val context = LocalContext.current
-    val permissionsState = rememberMultiplePermissionsState(
-        permissions = listOf(
-            Manifest.permission.CHANGE_WIFI_STATE,
-            Manifest.permission.ACCESS_WIFI_STATE,
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        )
-    )
 
-    var ssid by remember { mutableStateOf(TextFieldValue("")) }
-    var password by remember { mutableStateOf(TextFieldValue("")) }
-    var status by remember { mutableStateOf("Not Connected") }
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .align(Alignment.Center),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(text = "Control Watcher", fontSize = 30.sp, color = Color.White)
 
-    LaunchedEffect(Unit) {
-        permissionsState.launchMultiplePermissionRequest()
-    }
 
-    if (permissionsState.allPermissionsGranted) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            // Input fields for SSID and password
-            androidx.compose.material3.OutlinedTextField(
-                value = ssid,
-                onValueChange = { ssid = it },
-                label = { Text("SSID") }
-            )
-            androidx.compose.material3.OutlinedTextField(
-                value = password,
-                onValueChange = { password = it },
-                label = { Text("Password") }
-            )
             Button(onClick = {
-                connectToWifi(context, ssid.text, password.text) {
-                    status = it
-                }
+                val newMap = mapOf("light" to "1")
+                sendSensorData(newMap, context)
             }) {
-                Text("Connect")
+                Text(text = "Control light")
             }
-            Text("Status: $status")
+
+            Button(onClick = {
+                val newMap = mapOf("buzzer" to "1")
+                sendSensorData(newMap, context)
+            }) {
+                Text(text = "Control buzzer")
+            }
         }
-    } else {
-        // Display a message requesting the user to grant permissions
-        Text("Please grant all required permissions to proceed.")
-    }
-}
-
-@Suppress("DEPRECATION")
-fun connectToWifi(context: Context, ssid: String, password: String, onStatusChanged: (String) -> Unit) {
-    val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
-
-    val wifiConfig = WifiConfiguration().apply {
-        SSID = "\"$ssid\""
-        preSharedKey = "\"$password\""
-    }
-
-    val netId = wifiManager.addNetwork(wifiConfig)
-    if (netId != -1) {
-        wifiManager.disconnect()
-        wifiManager.enableNetwork(netId, true)
-        wifiManager.reconnect()
-        onStatusChanged("Connected to $ssid")
-    } else {
-        onStatusChanged("Failed to connect to $ssid")
     }
 }

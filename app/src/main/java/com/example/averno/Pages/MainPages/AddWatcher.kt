@@ -76,7 +76,8 @@ fun AddWatcher() {
                 Spacer(modifier = Modifier.padding(10.dp))
 
                 Button(onClick = {
-                    sendSensorData(latitude.toString(), longitude.toString(), context)
+                    val newMap = mapOf("latitude" to latitude.toString(), "longitude" to longitude.toString())
+                    sendSensorData(newMap, context)
                 }) {
                     Text(text = "Send")
                 }
