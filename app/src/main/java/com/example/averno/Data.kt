@@ -23,7 +23,7 @@ data class SensorData(
     val gas: Float = 0f,
     val wind_speed: Float = 0f,
     val rain: Float = 0f,
-    val smoke_danger: String = "0",
+    val smoke_danger: Boolean = false,
     val local_fwi: Float = 0f,
     var coordinates: Coordinates = Coordinates(),
 )
@@ -85,7 +85,7 @@ class GetFirebaseData: ViewModel(){
                         if (sensorSums[6] < sensorData.local_fwi){
                             sensorSums[6] = sensorData.local_fwi
                         }
-                        amountOfSensors++;
+                        amountOfSensors++
                     }
 
                     val newForest = ForestData(
