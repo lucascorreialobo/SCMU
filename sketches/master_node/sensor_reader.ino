@@ -17,7 +17,7 @@ const float DEFAULT_BUI = 20.0; // Example starting value
 struct SensorData sensor_data;
 
 float randomFloat(float min, float max) {
-    return min + static_cast<float>(rand()) / static_cast<float>(RAND_MAX / (max - min));
+    return random(min * 100, max * 100) / 100.0;
 }
 
 struct SensorData get_sensor_data(){
@@ -35,8 +35,7 @@ struct SensorData get_sensor_data(){
   sensor_data.gas = isnan(gasValue) ? randomFloat(0.0, 10.0) : gasValue;
   sensor_data.windSpeed = wind_speed_val;
   sensor_data.rain = rain_val;
-  float fwi = fwi_calc();
-  sensor_data.local_FWI = isnan(fwi) ? randomFloat(0.0, 30.0) : fwi;
+  sensor_data.local_FWI = fwi_calc();
   sensor_data.isSmokeDanger = isDangerSmoke();
 
   return sensor_data;
@@ -247,8 +246,6 @@ float calculateFWI(float ISI, float BUI) {
   else{
     return b;
   }
-  // float F = 0.1 * ISI * BUI;
-  // return F > 0 ? F / (0.1 + F) : 0;
 }
 
 // float fwi_calc(){

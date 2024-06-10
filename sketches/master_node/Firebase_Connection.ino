@@ -6,7 +6,7 @@
 #define USER_PASSWORD "Admin00"
 #define DATABASE_URL "https://averno-scmu-default-rtdb.europe-west1.firebasedatabase.app/"
 
-#define VALUES_PER_SENSOR 9
+#define VALUES_PER_SENSOR 11
 
 #define FIREBASE_PROJECT_ID "averno-scmu"
 #define FIREBASE_CLIENT_EMAIL "firebase-adminsdk-a6wrc@averno-scmu.iam.gserviceaccount.com"
@@ -177,7 +177,7 @@ void printResult(AsyncResult &aResult)
         if(++tasksCompleted >= sensorDataCounter * VALUES_PER_SENSOR){
           infoSent = true;
         }
-        Serial.printf("%d tasks completed. %d to go", tasksCompleted, sensorDataCounter * VALUES_PER_SENSOR - tasksCompleted);
+        Serial.printf("%d tasks completed. %d to go\n", tasksCompleted, sensorDataCounter * VALUES_PER_SENSOR - tasksCompleted);
     }
 }
 
@@ -275,8 +275,8 @@ void sendDataOnArray() {
     Database.set<float>(aClient, timedDevicePath + "gas",           sd.gas, asyncCB, "setGas");
     Database.set<float>(aClient, timedDevicePath + "wind_speed",    sd.windSpeed, asyncCB, "setWindSpeed");
     Database.set<float>(aClient, timedDevicePath + "rain",          sd.rain, asyncCB, "setRain");
-    Database.set<bool> (aClient, timedDevicePath + "smokeDanger",   sd.isSmokeDanger, asyncCB, "setIsSmokeDanger");
-    Database.set<float>(aClient, timedDevicePath + "localFWI",      sd.local_FWI, asyncCB, "setFWI");
+    Database.set<bool> (aClient, timedDevicePath + "smoke_danger",   sd.isSmokeDanger, asyncCB, "setIsSmokeDanger");
+    Database.set<float>(aClient, timedDevicePath + "local_fwi",      sd.local_FWI, asyncCB, "setFWI");
 
     // Database.set<bool> (aClient, timedDevicePath + "smokeDanger",  false, asyncCB, "setIsSmokeDanger");
     // Database.set<float>(aClient, timedDevicePath + "localFWI",      22.0, asyncCB, "setFWI");
