@@ -47,8 +47,6 @@ fun ForestListPage(navigationController: NavHostController){
         }
     }
 
-
-
     Column (modifier = Modifier
         .fillMaxSize()
         .background(backgroundColor(maxDanger))

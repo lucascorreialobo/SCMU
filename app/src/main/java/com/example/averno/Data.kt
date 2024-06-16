@@ -35,6 +35,7 @@ data class ForestData(
     val avgGas: Float = 0f,
     val avgWindSpeed: Float = 0f,
     val avgRain: Float = 0f,
+    val smoke_danger: Boolean = false,
     val maxFWI: Float = 0f,
 )
 
@@ -65,6 +66,7 @@ class GetFirebaseData: ViewModel(){
                     val sensorList = mutableListOf<SensorData>()
                     var amountOfSensors = 0
                     val sensorSums = Array<Float>(7) { 0f }
+                    var smokeDanger = false
                     for (sensorSnapshot in forestSnapshot.children) {
                         val dataSnapshot = sensorSnapshot.child("data")
                         val coordinatesSnapshot = sensorSnapshot.child("coordinates")
@@ -85,6 +87,8 @@ class GetFirebaseData: ViewModel(){
                         if (sensorSums[6] < sensorData.local_fwi){
                             sensorSums[6] = sensorData.local_fwi
                         }
+                        smokeDanger = smokeDanger || sensorData.smoke_danger
+
                         amountOfSensors++
                     }
 
@@ -95,7 +99,8 @@ class GetFirebaseData: ViewModel(){
                         avgGas = sensorSums[3]/amountOfSensors,
                         avgWindSpeed = sensorSums[4]/amountOfSensors,
                         avgRain = sensorSums[5]/amountOfSensors,
-                        maxFWI = sensorSums[6]
+                        maxFWI = sensorSums[6],
+                        smoke_danger = smokeDanger
                     )
 
                     forestDataMap[forestName] = newForest

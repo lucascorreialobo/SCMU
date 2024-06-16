@@ -73,11 +73,17 @@ fun ForestDetailPage(navigationController: NavHostController, key:String?) {
                     fontSize = DetailTitle
                 )
 
-                Info(title = "Temperature", value = forestData.avgTempC, unit = "ºC")
-                Info(title = "Humidity", value = forestData.avgHumi, unit = "%")
-                Info(title = "Precipitation", value = forestData.avgRain, unit = "ºC")
-                Info(title = "Wind Speed", value = forestData.avgWindSpeed, unit = "ºC")
-                Info(title = "Air quality", value = forestData.avgGas, unit = "ºC")
+                Info(title = "Temperature", value = forestData.avgTempC.toString(), unit = "ºC")
+                Info(title = "Humidity", value = forestData.avgHumi.toString(), unit = "%")
+                Info(title = "Precipitation", value = forestData.avgRain.toString(), unit = "mm")
+                Info(title = "Wind Speed", value = forestData.avgWindSpeed.toString(), unit = "km/h")
+                Info(title = "Gas concentration", value = forestData.avgGas.toString(), unit = "ppm")
+                if(forestData.smoke_danger){
+                    Info(title = "Danger of smoke?", value = "Yes" , unit = "")
+                } else {
+                    Info(title = "Danger of smoke?", value = "No" , unit = "")
+                }
+
 
 
             HorizontalDivider(thickness = 3.dp, color = Color.DarkGray)
@@ -116,12 +122,16 @@ fun ForestDetailPage(navigationController: NavHostController, key:String?) {
                             fontSize = DetailTitle
                         )
 
-                        Info(title = "Temperature", value = sensor.temperatureC, unit = "ºC")
-                        Info(title = "Humidity", value = sensor.humidity, unit = "%")
-                        Info(title = "Precipitation", value = sensor.rain, unit = "ºC")
-                        Info(title = "Wind Speed", value = sensor.wind_speed, unit = "ºC")
-                        Info(title = "Air quality", value = sensor.gas, unit = "ºC")
-
+                        Info(title = "Temperature", value = sensor.temperatureC.toString(), unit = "ºC")
+                        Info(title = "Humidity", value = sensor.humidity.toString(), unit = "%")
+                        Info(title = "Precipitation", value = sensor.rain.toString(), unit = "mm")
+                        Info(title = "Wind Speed", value = sensor.wind_speed.toString(), unit = "km/h")
+                        Info(title = "Gas concentration", value = sensor.gas.toString(), unit = "ppm")
+                        if(sensor.smoke_danger){
+                            Info(title = "Danger of smoke?", value = "Yes" , unit = "")
+                        } else {
+                            Info(title = "Danger of smoke?", value = "No" , unit = "")
+                        }
                     }
                 }
             }
@@ -129,7 +139,7 @@ fun ForestDetailPage(navigationController: NavHostController, key:String?) {
     }
 }
 @Composable
-fun Info(title: String, value: Float, unit: String){
+fun Info(title: String, value: String, unit: String){
     Column {
         Text(
             text = "$title: $value$unit",
@@ -140,3 +150,4 @@ fun Info(title: String, value: Float, unit: String){
         )
     }
 }
+

@@ -32,8 +32,8 @@ fun getDangerColor(dangerLevel: Float?): Float{
         color = dangerLevel
     }
 
-    return if(color <= 85){
-        85 - color
+    return if(color <= 80){
+        80 - color
     } else {
         0f
     }
