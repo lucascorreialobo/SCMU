@@ -79,9 +79,9 @@ fun ForestDetailPage(navigationController: NavHostController, key:String?) {
                 Info(title = "Wind Speed", value = forestData.avgWindSpeed.toString(), unit = "km/h")
                 Info(title = "Gas concentration", value = forestData.avgGas.toString(), unit = "ppm")
                 if(forestData.smoke_danger){
-                    Info(title = "Danger of smoke?", value = "Yes" , unit = "")
+                    Info(title = "Danger of smoke", value = "Yes" , unit = "")
                 } else {
-                    Info(title = "Danger of smoke?", value = "No" , unit = "")
+                    Info(title = "Danger of smoke", value = "No" , unit = "")
                 }
 
 
@@ -128,9 +128,9 @@ fun ForestDetailPage(navigationController: NavHostController, key:String?) {
                         Info(title = "Wind Speed", value = sensor.wind_speed.toString(), unit = "km/h")
                         Info(title = "Gas concentration", value = sensor.gas.toString(), unit = "ppm")
                         if(sensor.smoke_danger){
-                            Info(title = "Danger of smoke?", value = "Yes" , unit = "")
+                            Info(title = "Danger of smoke", value = "Yes" , unit = "")
                         } else {
-                            Info(title = "Danger of smoke?", value = "No" , unit = "")
+                            Info(title = "Danger of smoke", value = "No" , unit = "")
                         }
                     }
                 }

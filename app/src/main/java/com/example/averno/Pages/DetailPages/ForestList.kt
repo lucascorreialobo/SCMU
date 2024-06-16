@@ -36,7 +36,6 @@ import com.example.averno.ui.theme.statusColor
 fun ForestListPage(navigationController: NavHostController){
 
     val viewModel: GetFirebaseData = viewModel()
-    val forestList by viewModel.forestSensorMap.collectAsState()
     val forestData by viewModel.forestData.collectAsState()
 
     var maxDanger = 0f
@@ -46,6 +45,8 @@ fun ForestListPage(navigationController: NavHostController){
             maxDanger = data.value.maxFWI
         }
     }
+
+    val sortedForestData = forestData.toList().sortedByDescending {(_, value) -> value.maxFWI}.toMap()
 
     Column (modifier = Modifier
         .fillMaxSize()
@@ -57,14 +58,14 @@ fun ForestListPage(navigationController: NavHostController){
             color = Color.White,
             fontSize = 35.sp)
 
-        for (f in forestList) {
+        for (f in sortedForestData) {
             Button(
                 onClick = { navigationController.navigate("forest_detail_page/" + f.key)},
                 Modifier
                     .fillMaxSize()
                     .padding(4.dp),
                 shape = RoundedCornerShape(20),
-                colors = ButtonDefaults.buttonColors(containerColor = statusColor(forestData[f.key]?.maxFWI))
+                colors = ButtonDefaults.buttonColors(containerColor = statusColor(f.value.maxFWI))
             ) {
                 Row (Modifier.fillMaxWidth()){
                     Image(
