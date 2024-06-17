@@ -70,11 +70,11 @@ void setup() {
   Serial.begin(9600);
   while (!Serial) {}  // wait for Serial to start
   pinMode(BUZZZER_PIN, OUTPUT);
-
+  pinMode(LED_BUILTIN, OUTPUT);
+  delay(1000);
   //Location setup cycle
   // locationSetup();
-  checkActuators(20);
-
+  
   setup_master_connection();
   Serial.println(WiFi.localIP());
 

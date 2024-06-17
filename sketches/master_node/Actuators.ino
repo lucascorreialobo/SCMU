@@ -1,12 +1,12 @@
-int buzzerStart = 0;
-int ledStart = 0;
+unsigned long buzzerStart = 0;
+unsigned long ledStart = 0;
 
 
-void dealActuators(){
-  int currentTime = millis();
-  dealBuzzer(buzzerStart);
-  dealLED(buzzerStart);
-}
+//void dealActuators(){
+//  unsigned long currentTime = millis();
+//  dealBuzzer(buzzerStart, currentTime);
+//  dealLED(buzzerStart, currentTime);
+//}
 
 
 
@@ -14,7 +14,7 @@ void checkActuators(int tryForSeconds){
   WiFiServer server(80);
 
   if (!WiFi.softAP(mySSID, myPassword)) {
-    log_e("Soft AP creation failed.");
+    Serial.print("Soft AP creation failed.");
     while (1);
   }
   IPAddress myIP = WiFi.softAPIP();
@@ -32,15 +32,16 @@ void checkActuators(int tryForSeconds){
     if (client) {                            // if a new client connects,
       Serial.println("New Client.");         // print a message out in the serial port
       bool expectedRequest = readHeaders(client, "GET /buzzer");
-
-      // if(expectedRequest){
-      //   playTune();
-      //   break;
-      // }
+      Serial.println("Inside");
+      if(expectedRequest){
+        playTune();
+        dealLED();
+        break;
+      }
     }
 
     //will do the necessary changes to the actuators
-    dealActuators()
+    //dealActuators();
 
     currentTime = millis();
   }

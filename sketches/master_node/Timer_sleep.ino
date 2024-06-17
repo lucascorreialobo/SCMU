@@ -2,6 +2,10 @@
 #define uS_TO_S_FACTOR 1000000ULL  /* Conversion factor for micro seconds to seconds */
 
 void start_sleep_for(int time){
+
+  Serial.println("Starting Looking for instructions on actuators");
+  checkActuators(20);
+
   preferences.begin("Averno", false);
   preferences.putBool("Skip Startup", true); //by default set skip startup to false, if going to forced sleep set to true
   preferences.end();
