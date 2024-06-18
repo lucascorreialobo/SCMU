@@ -5,9 +5,6 @@ int MasterCnt = 0;
 
 bool was_delivery_sucess = false;
 
-String mySSID = "yourAP";
-String myPassword = "yourPassword";
-
 #define CHANNEL 1
 #define PRINTSCANRESULTS 0
 
