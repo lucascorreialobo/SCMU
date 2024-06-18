@@ -115,7 +115,7 @@ void printError(int code, const String &msg)
 }
 
 void FCM_send_message(String title, String body){
-  setUpWifi();
+  // setUpWifi();
 
   FCM_setup();
 
@@ -143,7 +143,7 @@ void FCM_send_message(String title, String body){
     }
   }
 
-  disconnect_WiFi();
+  // disconnect_WiFi();
 }
 
 

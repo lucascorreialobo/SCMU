@@ -5,6 +5,9 @@ int MasterCnt = 0;
 
 bool was_delivery_sucess = false;
 
+String mySSID = "yourAP";
+String myPassword = "yourPassword";
+
 #define CHANNEL 1
 #define PRINTSCANRESULTS 0
 
@@ -56,7 +59,9 @@ void configSlaveDeviceAP() {
   String Prefix = "Slave:";
   String Mac = WiFi.macAddress();
   String SSID = Prefix + Mac;
+  mySSID = SSID;
   String Password = "123456789";
+  myPassword = Password;
   bool result = WiFi.softAP(SSID.c_str(), Password.c_str(), CHANNEL, 0);
   if (!result) {
     Serial.println("AP Config failed.");
