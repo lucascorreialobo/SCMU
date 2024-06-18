@@ -13,6 +13,7 @@
 #define MQ2_PIN 25
 
 #define BUZZZER_PIN 16
+#define LED_BUILTIN 17
 
 const int TIME_TO_SLEEP = 10;           /* Time ESP32 will go to sleep (in microseconds); multiplied by above conversion to achieve seconds*/
 const int TIME_TO_WORK = 20 * 1000; //30
