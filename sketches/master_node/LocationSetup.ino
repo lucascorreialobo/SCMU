@@ -65,10 +65,10 @@ Coordinates StartServer(){
   String longitude  = "";
   bool readCoordinates = false;
 
-  if (!WiFi.softAP(mySSID, myPassword)) {
-    log_e("Soft AP creation failed.");
-    while (1);
-  }
+  //if (!WiFi.softAP(mySSID, myPassword)) {
+  //  log_e("Soft AP creation failed.");
+  //  while (1);
+  //}
   IPAddress myIP = WiFi.softAPIP();
   Serial.print("AP IP address: ");
   Serial.println(myIP);

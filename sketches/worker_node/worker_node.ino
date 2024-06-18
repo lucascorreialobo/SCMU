@@ -66,7 +66,7 @@ void setup() {
 
   //Location setup cycle
   locationSetup();
-
+  checkActuators(20);
   // start_DHT_sensor();
 
 

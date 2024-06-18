@@ -72,10 +72,12 @@ void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
   delay(1000);
   //Location setup cycle
-  locationSetup();
-  checkActuators(20);
   
   setup_master_connection();
+  
+  locationSetup();
+  checkActuators(20);
+
   Serial.println(WiFi.localIP());
 
   bool isSleepyTime = true;

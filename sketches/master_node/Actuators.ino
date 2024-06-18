@@ -13,10 +13,10 @@ unsigned long ledStart = 0;
 void checkActuators(int tryForSeconds){
   WiFiServer server(80);
 
-  if (!WiFi.softAP(mySSID, myPassword)) {
-    Serial.print("Soft AP creation failed.");
-    while (1);
-  }
+  //if (!WiFi.softAP(mySSID, myPassword)) {
+  //  Serial.print("Soft AP creation failed.");
+  //  while (1);
+  //}
   IPAddress myIP = WiFi.softAPIP();
   Serial.print("AP IP address: ");
   Serial.println(myIP);
