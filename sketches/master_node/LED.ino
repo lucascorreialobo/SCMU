@@ -1,4 +1,4 @@
-#define LED_BUILTIN 17
+
 
 void dealLED(){
   for(int i = 0; i < 10; i++){

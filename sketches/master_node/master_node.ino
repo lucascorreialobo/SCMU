@@ -8,14 +8,15 @@
 #define DHT_PIN 27 //Digital pin connected to the DHT sensor
 #define MQ2_PIN 14
 
+#define LED_BUILTIN 17
 #define BUZZZER_PIN  16 // ESP32 pin GPIO4 connected to piezo buzzer
 
 
 
-const char* ssid     = "MEO-F59510";
-const char* password = "casadoslobos";
-// const char* ssid     = "NOS_Internet_4FC7";//"NOS_Internet_4FC7";
-// const char* password = "67827246";//"67827246";
+const char* ssid     = "LL";//MEO-F59510
+const char* password = "LucasL00";//casadoslobos
+//const char* ssid     = "NOS_Internet_4FC7";//"NOS_Internet_4FC7";
+//const char* password = "67827246";//"67827246";
 
 const char *mySSID = "yourAP";
 const char *myPassword = "yourPassword";
@@ -73,7 +74,8 @@ void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
   delay(1000);
   //Location setup cycle
-  // locationSetup();
+  locationSetup();
+  checkActuators(20);
   
   setup_master_connection();
   Serial.println(WiFi.localIP());
@@ -104,7 +106,7 @@ void setup() {
   else{
     Serial.println("Starting Work");
   }
-
+  previousMillis = millis();
 }
 
 void loop() {
@@ -132,7 +134,7 @@ void loop() {
 
   delay(1000);
 
-  previousMillis = currentMillis;
+  //previousMillis = currentMillis;
 }
 
 void printSensorData() {
