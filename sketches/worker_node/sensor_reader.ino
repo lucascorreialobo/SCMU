@@ -30,31 +30,49 @@ struct SensorData get_sensor_data(){
   getMacAddress(sensor_data.macAddress);
   sensor_data.coordinates = getPreferencesCoordinates();
   sensor_data.temperatureC = isnan(dht.temperatureC) ? randomFloat(-10.0, 40.0) : dht.temperatureC;
+  Serial.print("Temperature: ");
+  Serial.print(sensor_data.temperatureC);
   sensor_data.temperatureF = isnan(dht.temperatureF) ? sensor_data.temperatureC * (9.0 / 5.0) + 32.0 : dht.temperatureF;
   sensor_data.humidity = isnan(dht.humidity) ? randomFloat(0.0, 100.0) : dht.humidity;
-  sensor_data.gas = isnan(gasValue) ? randomFloat(0.0, 10.0) : gasValue;
+  sensor_data.gas = gasValue; //randomFloat(0.0, 350.0)
   sensor_data.windSpeed = randomFloat(0.0, 100.0);
   sensor_data.rain = randomFloat(0.0, 50.0);
   sensor_data.local_FWI = fwi_calc();
-  sensor_data.isSmokeDanger = isDangerSmoke();
+  sensor_data.isSmokeDanger = isDangerSmoke(gasValue);
 
   return sensor_data;
 }
 
-bool isDangerSmoke(){
-   // Include logic to determine if smoke levels are indicative of a fire
-  bool possible_fire = sensor_data.gas > SMOKE_THRESHOLD; // Define a suitable threshold based on calibration
-
+void check_for_dangers(SensorData data){
+  bool possible_fire = data.gas > SMOKE_THRESHOLD; // Define a suitable threshold based on calibration
   // Print smoke level and fire warning
   Serial.print("Smoke Level: ");
-  Serial.print(sensor_data.gas);
+  Serial.print(data.gas);
   Serial.println(" ppm");
+  setUpWifi();
   if (possible_fire) {
     Serial.println("Warning: High smoke levels detected!");
     FCM_send_message("Alert!", "Warning: High smoke levels detected!");
   }
 
-  return possible_fire;
+  float FWI = data.local_FWI;
+  if( MODERATE_DANGER || HIGH_DANGER || VERY_HIGH_DANGER){
+    Serial.println("Warning: High intensity fires, including crown fires!");
+    FCM_send_message("Alert!", "Warning: High intensity fires, including crown fires detected!");
+  }
+  if( MAXIMUM_DANGER ){
+    Serial.println("Warning: 	Extremely intense fires with active crown fires, spotting and high dificulty for fire management!");
+    FCM_send_message("Alert!", "Warning: 	Extremely intense fires with active crown fires, spotting and high dificulty for fire management!");
+  }
+  if( EXTREME_DANGER || EXCEPTIONAL_DANGER){
+    Serial.println("Warning: 	Exceptional intense fires with extreme dificulty for fire management!");
+    FCM_send_message("Alert!", "Warning: 	Exceptional intense fires with extreme dificulty for fire management!");
+  }
+  disconnect_WiFi();
+}
+
+bool isDangerSmoke(float gas_val){
+  return sensor_data.gas > SMOKE_THRESHOLD;
 }
 
 
@@ -81,19 +99,6 @@ float fwi_calc(){
   // Output the result
   Serial.print("FWI: ");
   Serial.println(FWI);
-
-  if( MODERATE_DANGER || HIGH_DANGER || VERY_HIGH_DANGER){
-    Serial.println("Warning: High intensity fires, including crown fires!");
-    FCM_send_message("Alert!", "Warning: High intensity fires, including crown fires detected!");
-  }
-  if( MAXIMUM_DANGER ){
-    Serial.println("Warning: 	Extremely intense fires with active crown fires, spotting and high dificulty for fire management!");
-    FCM_send_message("Alert!", "Warning: 	Extremely intense fires with active crown fires, spotting and high dificulty for fire management!");
-  }
-  if( EXTREME_DANGER || EXCEPTIONAL_DANGER){
-    Serial.println("Warning: 	Exceptional intense fires with extreme dificulty for fire management!");
-    FCM_send_message("Alert!", "Warning: 	Exceptional intense fires with extreme dificulty for fire management!");
-  }
 
   return FWI;
 }
@@ -253,4 +258,3 @@ float calculateFWI(float ISI, float BUI) {
     return b;
   }
 }
-

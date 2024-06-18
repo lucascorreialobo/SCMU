@@ -56,7 +56,9 @@ void configSlaveDeviceAP() {
   String Prefix = "Slave:";
   String Mac = WiFi.macAddress();
   String SSID = Prefix + Mac;
+  mySSID = SSID;
   String Password = "123456789";
+  myPassword = Password;
   bool result = WiFi.softAP(SSID.c_str(), Password.c_str(), CHANNEL, 0);
   if (!result) {
     Serial.println("AP Config failed.");

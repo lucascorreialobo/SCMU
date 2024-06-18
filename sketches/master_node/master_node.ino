@@ -11,15 +11,13 @@
 #define LED_BUILTIN 17
 #define BUZZZER_PIN  16 // ESP32 pin GPIO4 connected to piezo buzzer
 
-
+String mySSID = "yourAP";
+String myPassword = "yourPassword";
 
 const char* ssid     = "LL";//MEO-F59510
 const char* password = "LucasL00";//casadoslobos
 //const char* ssid     = "NOS_Internet_4FC7";//"NOS_Internet_4FC7";
 //const char* password = "67827246";//"67827246";
-
-const char *mySSID = "yourAP";
-const char *myPassword = "yourPassword";
 
 const int TIME_TO_SLEEP = 10;           /* Time ESP32 will go to sleep (in microseconds); multiplied by above conversion to achieve seconds*/
 const int TIME_TO_WORK = 20 * 1000; // the duration that master is turned on

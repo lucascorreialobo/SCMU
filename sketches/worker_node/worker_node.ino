@@ -10,7 +10,9 @@
 
 
 #define DHT_PIN 27 //Digital pin connected to the DHT sensor
-#define MQ2_PIN 26
+#define MQ2_PIN 25
+
+#define BUZZZER_PIN 16
 
 const int TIME_TO_SLEEP = 10;           /* Time ESP32 will go to sleep (in microseconds); multiplied by above conversion to achieve seconds*/
 const int TIME_TO_WORK = 20 * 1000; //30
@@ -19,6 +21,8 @@ const int TIME_TO_RCV_SIGNAL = 40 * 1000;
 const char* ssid     = "NOS_Internet_4FC7";
 const char* password = "67827246";
 
+String mySSID = "yourAP";
+String myPassword = "yourPassword";
 
 struct Coordinates {
   String latitude;
@@ -53,13 +57,15 @@ void setup() {
   while (!Serial) {}  // wait for Serial to start
 
 
-  //Location setup cycle
-  locationSetup();
 
   // ulp_setup(); // it really only runs on the first ESP32 boot
   // set_fadeCycleDelay();
 
   setup_slave_connection();
+
+  //Location setup cycle
+  locationSetup();
+
   // start_DHT_sensor();
 
 
@@ -77,6 +83,7 @@ void setup() {
   }
   
   if(isSleepyTime){
+    check_for_dangers(get_sensor_data());
     Serial.println("Signaling time is over. Entering Deep Sleep");
     Serial.flush();
     start_sleep_for(TIME_TO_SLEEP);
@@ -85,32 +92,33 @@ void setup() {
     Serial.println("Starting Work");
     start_DHT_sensor();
   }
+
+  previousMillis = millis();
 }
 
 void loop() {
   
   unsigned long currentMillis = millis();
-  Serial.print("SHIIIIIIIIIIIIIT: ");
   Serial.println(currentMillis - previousMillis);
-  Serial.print("TIME TO WORK: ");
-  Serial.println(TIME_TO_WORK);
   if (currentMillis - previousMillis >= TIME_TO_WORK) {
     Serial.println("Working time is over. Entering Deep Sleep");
     start_sleep_for(TIME_TO_SLEEP);
   }
 
   manageMaster();
-  send_data(get_sensor_data());
+  SensorData data_to_send = get_sensor_data();
+  send_data(data_to_send);
 
   delay(2000);
 
   if(wasDeliverySuccessful()){
+      check_for_dangers(data_to_send);
       Serial.println("Sent data successfully. Entering Deep Sleep");
       Serial.flush();
       start_sleep_for(TIME_TO_SLEEP);
     }
 
-  previousMillis = currentMillis;
+  // previousMillis = currentMillis;
 }
 
 
